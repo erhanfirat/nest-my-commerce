@@ -1,17 +1,10 @@
 import { Module } from '@nestjs/common';
-import { UsersController } from './controller/users.controller';
-import { UsersService } from './service/users.service';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { ResponseInterceptor } from './interceptor/response.interceptor';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
-  providers: [
-    UsersService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ResponseInterceptor,
-    },
-  ],
+  providers: [UsersService],
+  exports: [UsersService]
 })
 export class UsersModule {}
