@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Header,
-  Headers,
   HttpCode,
   HttpException,
   HttpStatus,
@@ -16,8 +15,6 @@ import {
   Res,
   UseGuards,
   UseInterceptors,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { SortOrder } from 'src/common/utils/types';
@@ -95,7 +92,6 @@ export class UsersController {
 
   @Post('register')
   @HttpCode(201)
-  // @UsePipes(new ValidationPipe())
   createUser(
     @Body('birthdate', ConvertIsoToDatePipe) birthdate: Date,
     @Body() body: Omit<CreateUserDto, 'birthDate'>,

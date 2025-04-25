@@ -14,7 +14,6 @@ import {
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Product } from './entities/product.entity';
 import { PaginationParams } from '../common/types/pagination.type';
 import { ParseIntPipe } from '@nestjs/common';
 import { CapitalizeNamePipe } from '../common/pipes/capitalize-name.pipe';
@@ -30,7 +29,7 @@ export class ProductsController {
       page: query.page ? parseInt(String(query.page), 10) : 1,
       limit: query.limit ? parseInt(String(query.limit), 10) : 10,
       sort: query.sort || 'id',
-      order: query.order || 'ASC'
+      order: query.order || 'ASC',
     });
   }
 
@@ -48,7 +47,7 @@ export class ProductsController {
   ) {
     return this.productsService.create({
       ...createProductDto,
-      name
+      name,
     });
   }
 
@@ -61,7 +60,7 @@ export class ProductsController {
   ) {
     return this.productsService.update(id, {
       ...updateProductDto,
-      ...(name && { name })
+      ...(name && { name }),
     });
   }
 

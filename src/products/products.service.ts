@@ -13,6 +13,16 @@ interface PaginatedProducts {
   limit: number;
 }
 
+interface ProductData {
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  imageUrl?: string;
+  category?: string;
+  [key: string]: any;
+}
+
 @Injectable()
 export class ProductsService {
   private readonly logger = new Logger(ProductsService.name);
@@ -27,43 +37,49 @@ export class ProductsService {
     try {
       const filePath = path.join(process.cwd(), 'src/data/dummyProducts.json');
       const data = fs.readFileSync(filePath, 'utf-8');
-      const products = JSON.parse(data);
-      
-      this.products = products.map((product: any, index: number) => ({
+      const products = JSON.parse(data) as ProductData[];
+
+      this.products = products.map((product, index: number) => ({
         ...product,
         id: index + 1,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }));
-      
+
       this.nextId = this.products.length + 1;
       this.logger.log(`${this.products.length} ürün yüklendi`);
     } catch (error) {
-      this.logger.error('Dummy ürün verileri yüklenemedi', error instanceof Error ? error.stack : '');
+      this.logger.error(
+        'Dummy ürün verileri yüklenemedi',
+        error instanceof Error ? error.stack : '',
+      );
       this.products = [];
     }
   }
 
   findAll(params: PaginationParams): PaginatedProducts {
     const { page = 1, limit = 10, sort = 'id', order = 'ASC' } = params;
-    
+
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
-    
-    const sortedProducts = [...this.products].sort((a: any, b: any) => {
+
+    const sortedProducts = [...this.products].sort((a, b) => {
+      const aValue = a[sort as keyof Product];
+      const bValue = b[sort as keyof Product];
+
       if (order === 'ASC') {
-        return a[sort] > b[sort] ? 1 : -1;
+        return aValue > bValue ? 1 : -1;
       }
-      return a[sort] < b[sort] ? 1 : -1;
+      return aValue < bValue ? 1 : -1;
     });
-    
+
     const paginatedProducts = sortedProducts.slice(startIndex, endIndex);
-    
+
     return {
       products: paginatedProducts,
       total: this.products.length,
       page,
-      limit
+      limit,
     };
   }
 
@@ -80,9 +96,9 @@ export class ProductsService {
       id: this.nextId++,
       ...createProductDto,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
-    
+
     this.products.push(newProduct);
     this.logger.log(`Yeni ürün oluşturuldu, ID: ${newProduct.id}`);
     return newProduct;
@@ -90,17 +106,17 @@ export class ProductsService {
 
   update(id: number, updateProductDto: UpdateProductDto): Product {
     const index = this.products.findIndex((product) => product.id === id);
-    
+
     if (index === -1) {
       throw new NotFoundException(`${id} ID'li ürün bulunamadı`);
     }
-    
+
     const updatedProduct = {
       ...this.products[index],
       ...updateProductDto,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
-    
+
     this.products[index] = updatedProduct;
     this.logger.log(`${id} ID'li ürün güncellendi`);
     return updatedProduct;
@@ -108,11 +124,11 @@ export class ProductsService {
 
   remove(id: number): void {
     const index = this.products.findIndex((product) => product.id === id);
-    
+
     if (index === -1) {
       throw new NotFoundException(`${id} ID'li ürün bulunamadı`);
     }
-    
+
     this.products.splice(index, 1);
     this.logger.log(`${id} ID'li ürün silindi`);
   }

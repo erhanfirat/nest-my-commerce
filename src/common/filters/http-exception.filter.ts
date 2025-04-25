@@ -4,17 +4,25 @@ import {
   ArgumentsHost,
   HttpException,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ApiErrorResponse } from '../types/pagination.type';
+
+interface HttpExceptionResponse {
+  message: string;
+  statusCode?: number;
+  error?: string;
+}
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    // const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
-    const exceptionResponse = exception.getResponse();
+    const exceptionResponse = exception.getResponse() as
+      | string
+      | HttpExceptionResponse;
 
     const errorResponse: ApiErrorResponse = {
       success: false,
@@ -22,7 +30,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message:
         typeof exceptionResponse === 'string'
           ? exceptionResponse
-          : (exceptionResponse as any).message || 'Bir hata oluştu',
+          : exceptionResponse.message || 'Bir hata oluştu',
     };
 
     response.status(status).json(errorResponse);

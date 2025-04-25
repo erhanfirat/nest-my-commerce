@@ -17,7 +17,7 @@ export class TransformResponseInterceptor<T>
     next: CallHandler,
   ): Observable<ApiResponse<T>> {
     return next.handle().pipe(
-      map((data) => ({
+      map((data: T) => ({
         success: true,
         timestamp: new Date().toISOString(),
         data,
