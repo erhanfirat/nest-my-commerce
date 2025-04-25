@@ -23,7 +23,7 @@ async function bootstrap(): Promise<void> {
     app.useGlobalInterceptors(new TransformResponseInterceptor());
     app.useGlobalFilters(new HttpExceptionFilter());
 
-    const port = process.env.PORT || 3020;
+    const port = process.env.PORT || 3000;
     await app.listen(port);
     logger.log(`Uygulama ${port} portunda çalışıyor`);
   } catch (error) {
