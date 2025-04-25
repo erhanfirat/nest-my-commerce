@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserRole } from '../types/roles.enum';
+import { UserRole } from '../../common/types/roles.enum';
 
 interface RequestUser {
   role?: UserRole;

@@ -22,7 +22,7 @@ import { CreateUserDto } from '../dto/CreateUserDto';
 import { Request, Response } from 'express';
 import { APP_AUTHOR, APP_VERSION } from 'src/common/constants/app-info';
 import { ConvertIsoToDatePipe } from '../pipe/convert-iso-to-date.pipe';
-import { SuperAdminGuard } from '../guard/super-admin.guard';
+import { SuperAdminGuard } from '../../auth/guards/super-admin.guard';
 import { ResponseInterceptor } from '../interceptor/response.interceptor';
 import { ConfigService } from '@nestjs/config';
 

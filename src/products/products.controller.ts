@@ -17,7 +17,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { PaginationParams } from '../common/types/pagination.type';
 import { ParseIntPipe } from '@nestjs/common';
 import { CapitalizeNamePipe } from '../common/pipes/capitalize-name.pipe';
-import { AdminGuard } from '../common/guards/admin.guard';
+import { AdminGuard } from '../auth/guards/admin.guard';
 
 @Controller('products')
 export class ProductsController {

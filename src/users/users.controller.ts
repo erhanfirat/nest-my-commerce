@@ -17,7 +17,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationParams } from '../common/types/pagination.type';
 import { ParseIntPipe } from '@nestjs/common';
 import { CapitalizeNamePipe } from '../common/pipes/capitalize-name.pipe';
-import { SuperAdminGuard } from '../common/guards/super-admin.guard';
+import { SuperAdminGuard } from '../auth/guards/super-admin.guard';
 
 @Controller('users')
 export class UsersController {
