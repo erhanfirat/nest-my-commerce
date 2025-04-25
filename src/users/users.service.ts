@@ -3,23 +3,14 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationParams } from '../common/types/pagination.type';
-import * as fs from 'fs';
-import * as path from 'path';
+import { dummyUsers } from '../common/utils/data';
+import { UserRole } from '../common/types/roles.enum';
 
-interface PaginatedUsers {
+export interface PaginatedUsers {
   users: User[];
   total: number;
   page: number;
   limit: number;
-}
-
-interface UserData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  role: string;
-  [key: string]: any;
 }
 
 @Injectable()
@@ -34,18 +25,22 @@ export class UsersService {
 
   private loadDummyData(): void {
     try {
-      const filePath = path.join(process.cwd(), 'src/data/dummyUsers.json');
-      const data = fs.readFileSync(filePath, 'utf-8');
-      const users = JSON.parse(data) as UserData[];
+      // dummyUsers içerisindeki veri formatını User entity formatına dönüştürüyoruz
+      this.users = dummyUsers.map((user, index: number) => {
+        const [firstName, lastName] = user.name.split(' ');
+        return {
+          id: user.id || index + 1,
+          firstName: firstName || '',
+          lastName: lastName || '',
+          email: user.email,
+          password: user.password,
+          role: this.mapUserRole(user.role),
+          createdAt: user.createdAt ? new Date(user.createdAt) : new Date(),
+          updatedAt: new Date(),
+        };
+      });
 
-      this.users = users.map((user, index: number) => ({
-        ...user,
-        id: index + 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }));
-
-      this.nextId = this.users.length + 1;
+      this.nextId = Math.max(...this.users.map((user) => user.id)) + 1;
       this.logger.log(`${this.users.length} kullanıcı yüklendi`);
     } catch (error) {
       this.logger.error(
@@ -53,6 +48,19 @@ export class UsersService {
         error instanceof Error ? error.stack : '',
       );
       this.users = [];
+    }
+  }
+
+  // UserRole türlerini eşleştir
+  private mapUserRole(role: number): UserRole {
+    switch (role) {
+      case 1:
+        return UserRole.SUPER_ADMIN;
+      case 2:
+        return UserRole.ADMIN;
+      case 3:
+      default:
+        return UserRole.USER;
     }
   }
 
@@ -65,6 +73,11 @@ export class UsersService {
     const sortedUsers = [...this.users].sort((a, b) => {
       const aValue = a[sort as keyof User];
       const bValue = b[sort as keyof User];
+
+      // Eğer değerlerden biri undefined ise
+      if (aValue === undefined && bValue === undefined) return 0;
+      if (aValue === undefined) return 1; // undefined değeri sona koy
+      if (bValue === undefined) return -1; // undefined değeri sona koy
 
       if (order === 'ASC') {
         return aValue > bValue ? 1 : -1;

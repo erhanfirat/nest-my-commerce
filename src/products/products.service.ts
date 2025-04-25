@@ -3,24 +3,13 @@ import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PaginationParams } from '../common/types/pagination.type';
-import * as fs from 'fs';
-import * as path from 'path';
+import { dummyProducts } from '../common/utils/data';
 
-interface PaginatedProducts {
+export interface PaginatedProducts {
   products: Product[];
   total: number;
   page: number;
   limit: number;
-}
-
-interface ProductData {
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  imageUrl?: string;
-  category?: string;
-  [key: string]: any;
 }
 
 @Injectable()
@@ -35,18 +24,27 @@ export class ProductsService {
 
   private loadDummyData(): void {
     try {
-      const filePath = path.join(process.cwd(), 'src/data/dummyProducts.json');
-      const data = fs.readFileSync(filePath, 'utf-8');
-      const products = JSON.parse(data) as ProductData[];
+      // dummyProducts içerisindeki veri formatını Product entity formatına dönüştürüyoruz
+      this.products = dummyProducts.map((product, index: number) => {
+        return {
+          id: product.id || index + 1,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          stock: product.stock,
+          imageUrl:
+            product.images && product.images.length > 0
+              ? product.images[0].url
+              : undefined,
+          category: product.category_id
+            ? `Kategori ${product.category_id}`
+            : undefined,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+      });
 
-      this.products = products.map((product, index: number) => ({
-        ...product,
-        id: index + 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }));
-
-      this.nextId = this.products.length + 1;
+      this.nextId = Math.max(...this.products.map((product) => product.id)) + 1;
       this.logger.log(`${this.products.length} ürün yüklendi`);
     } catch (error) {
       this.logger.error(
@@ -66,6 +64,10 @@ export class ProductsService {
     const sortedProducts = [...this.products].sort((a, b) => {
       const aValue = a[sort as keyof Product];
       const bValue = b[sort as keyof Product];
+
+      if (aValue === undefined && bValue === undefined) return 0;
+      if (aValue === undefined) return 1;
+      if (bValue === undefined) return -1;
 
       if (order === 'ASC') {
         return aValue > bValue ? 1 : -1;

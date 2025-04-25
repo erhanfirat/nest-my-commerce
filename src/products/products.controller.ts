@@ -11,7 +11,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ProductsService } from './products.service';
+import { ProductsService, PaginatedProducts } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PaginationParams } from '../common/types/pagination.type';
@@ -24,7 +24,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  findAll(@Query() query: PaginationParams) {
+  findAll(@Query() query: PaginationParams): PaginatedProducts {
     return this.productsService.findAll({
       page: query.page ? parseInt(String(query.page), 10) : 1,
       limit: query.limit ? parseInt(String(query.limit), 10) : 10,

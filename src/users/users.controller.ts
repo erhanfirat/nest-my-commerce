@@ -11,7 +11,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService, PaginatedUsers } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationParams } from '../common/types/pagination.type';
@@ -24,7 +24,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findAll(@Query() query: PaginationParams) {
+  findAll(@Query() query: PaginationParams): PaginatedUsers {
     return this.usersService.findAll({
       page: query.page ? parseInt(String(query.page), 10) : 1,
       limit: query.limit ? parseInt(String(query.limit), 10) : 10,

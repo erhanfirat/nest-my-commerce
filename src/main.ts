@@ -6,25 +6,30 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap(): Promise<void> {
   const logger = new Logger('Bootstrap');
-  const app = await NestFactory.create(AppModule);
+  try {
+    const app = await NestFactory.create(AppModule);
+    app.enableCors();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        forbidNonWhitelisted: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+      }),
+    );
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-      forbidNonWhitelisted: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-    }),
-  );
+    app.useGlobalInterceptors(new TransformResponseInterceptor());
+    app.useGlobalFilters(new HttpExceptionFilter());
 
-  app.useGlobalInterceptors(new TransformResponseInterceptor());
-  app.useGlobalFilters(new HttpExceptionFilter());
-
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
-  logger.log(`Uygulama ${port} portunda çalışıyor`);
+    const port = process.env.PORT || 3020;
+    await app.listen(port);
+    logger.log(`Uygulama ${port} portunda çalışıyor`);
+  } catch (error) {
+    logger.error('[Bootstrap] Uygulama başlatılamadı');
+    logger.error('[Bootstrap]', error);
+  }
 }
 
 bootstrap().catch((err) => {
