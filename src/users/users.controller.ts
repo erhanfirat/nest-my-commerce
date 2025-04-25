@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,8 +14,8 @@ export class UsersController {
   @Get()
   findAll(@Query() query: PaginationParams) {
     return this.usersService.findAll({
-      page: query.page ? parseInt(query.page as any, 10) : 1,
-      limit: query.limit ? parseInt(query.limit as any, 10) : 10,
+      page: query.page ? parseInt(String(query.page), 10) : 1,
+      limit: query.limit ? parseInt(String(query.limit), 10) : 10,
       sort: query.sort || 'id',
       order: query.order || 'ASC'
     });
@@ -27,6 +27,7 @@ export class UsersController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(
     @Body() createUserDto: CreateUserDto,
     @Body('firstName', CapitalizeNamePipe) firstName: string,
@@ -55,7 +56,8 @@ export class UsersController {
 
   @Delete(':id')
   @UseGuards(SuperAdminGuard)
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.remove(id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('id', ParseIntPipe) id: number): void {
+    this.usersService.remove(id);
   }
 } 

@@ -1,16 +1,28 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { UserRole } from '../types/roles.enum';
+
+interface RequestUser {
+  role?: UserRole;
+}
+
+interface RequestWithUser extends Request {
+  user?: RequestUser;
+}
 
 @Injectable()
 export class SuperAdminGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<RequestWithUser>();
     const user = request.user;
     
     if (!user) {
-      return false;
+      throw new UnauthorizedException('Kullanıcı bilgisi bulunamadı');
     }
     
-    return user.role === UserRole.SUPER_ADMIN;
+    if (user.role === UserRole.SUPER_ADMIN) {
+      return true;
+    }
+    
+    throw new UnauthorizedException('Bu işlem için Süper Admin yetkisi gereklidir');
   }
 }

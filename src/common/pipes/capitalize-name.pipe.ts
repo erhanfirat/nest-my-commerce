@@ -1,8 +1,8 @@
 import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
 
 @Injectable()
-export class CapitalizeNamePipe implements PipeTransform {
-  transform(value: any, metadata: ArgumentMetadata) {
+export class CapitalizeNamePipe implements PipeTransform<string, string> {
+  transform(value: string, _metadata: ArgumentMetadata): string {
     if (!value || typeof value !== 'string') {
       return value;
     }

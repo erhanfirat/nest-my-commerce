@@ -7,33 +7,35 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class CreateProductDto {
-  @IsString()
-  @MinLength(3)
-  @MaxLength(100)
+  @IsString({ message: 'İsim alanı metin olmalıdır' })
+  @MinLength(3, { message: 'İsim en az 3 karakter olmalıdır' })
+  @MaxLength(100, { message: 'İsim en fazla 100 karakter olmalıdır' })
   @Transform(({ value }) => value.trim())
   name: string;
 
-  @IsString()
-  @MinLength(10)
+  @IsString({ message: 'Açıklama alanı metin olmalıdır' })
+  @MinLength(10, { message: 'Açıklama en az 10 karakter olmalıdır' })
   @Transform(({ value }) => value.trim())
   description: string;
 
-  @IsNumber()
-  @Min(0)
+  @IsNumber({}, { message: 'Fiyat sayı olmalıdır' })
+  @Min(0, { message: 'Fiyat 0 veya daha büyük olmalıdır' })
+  @Type(() => Number)
   price: number;
 
-  @IsNumber()
-  @Min(0)
+  @IsNumber({}, { message: 'Stok sayı olmalıdır' })
+  @Min(0, { message: 'Stok 0 veya daha büyük olmalıdır' })
+  @Type(() => Number)
   stock: number;
 
-  @IsUrl()
+  @IsUrl({}, { message: 'Geçerli bir URL adresi giriniz' })
   @IsOptional()
   imageUrl?: string;
 
-  @IsString()
+  @IsString({ message: 'Kategori alanı metin olmalıdır' })
   @IsOptional()
   category?: string;
 }

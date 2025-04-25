@@ -1,18 +1,18 @@
-export type PaginationParams = {
+export interface PaginationParams {
   page?: number;
   limit?: number;
   sort?: string;
   order?: 'ASC' | 'DESC';
-};
+}
 
-export type ApiResponse<T> = {
+export interface ApiResponse<T> {
   success: boolean;
   timestamp: string;
   data: T;
-};
+}
 
-export type ApiErrorResponse = {
+export interface ApiErrorResponse {
   success: boolean;
   timestamp: string;
   message: string;
-};
+}
