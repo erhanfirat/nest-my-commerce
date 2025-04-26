@@ -1,67 +1,57 @@
-import { Injectable } from '@nestjs/common';
-import { dummyUsers } from 'src/common/utils/data';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PaginationOptions } from 'src/common/utils/types';
 import { CreateUserDto } from '../dto/CreateUserDto';
-import { UserRole, UserType } from '../utils/types';
+import { EntityManager, Repository } from 'typeorm';
+import { User } from '../entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 // DB ye bağlan
 
 @Injectable()
 export class UsersService {
-  private users = [...dummyUsers];
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
 
-  private randomNumber = Math.floor(Math.random() * 1000); // 1330
-
-  getAllUsers({ page = 0, limit = 5, sort, order = 'asc' }: PaginationOptions) {
-    const startIndex = page * limit;
-    const endIndex = startIndex + limit;
-
-    let sortedUsers = [...this.users];
-
-    if (sort) {
-      const direction = order === 'asc' ? 1 : -1;
-      sortedUsers = sortedUsers.sort((a, b) => {
-        return a[sort] > b[sort] ? direction : -direction;
-      });
-    }
-
-    return sortedUsers.slice(startIndex, endIndex);
+  async createUser(user: CreateUserDto) {
+    const newUser = new User(user);
+    const recUser = await this.userRepository.save(newUser);
+    return recUser;
   }
 
-  getUserComments(id: number) {
-    const user = this.getUserById(id);
+  async findAll({
+    page = 0,
+    limit = 5,
+    sort = 'id',
+    order = 'asc',
+  }: PaginationOptions): Promise<User[]> {
+    const offset = page * limit;
+
+    return this.userRepository
+      .createQueryBuilder('user')
+      .orderBy(`user.${sort}`, order.toUpperCase() as 'ASC' | 'DESC')
+      .skip(offset)
+      .take(limit)
+      .getMany();
+  }
+
+  async findOne(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+
     if (!user) {
-      return null;
+      throw new NotFoundException(`Kullanıcı bulunamadı. ID: ${id}`);
     }
-    return { user, comments: ['comment1', 'comment2', 'comment3'] };
-  }
 
-  getUserById(id: number) {
-    const user = this.users.find((user) => user.id === id);
     return user;
   }
 
-  deleteUserById(id: number) {
-    const user = this.getUserById(id);
-    if (user) {
-      this.users = this.users.filter((user) => user.id !== id);
-      return user;
-    }
-    return null;
-  }
+  async deleteUser(id: number): Promise<void> {
+    const result = await this.userRepository.delete(id);
 
-  createUser(user: CreateUserDto) {
-    // DB ye ekle
-    const newUser: UserType = {
-      id: Math.round(Math.random() * 10000000),
-      ...user,
-      birthdate: user.birthdate.toISOString().split('T')[0],
-      // "2000-10-20T00:00:00.000Z".split("T") => ["2000-10-20", "00:00:00.000Z"][0] => "2000-10-20"
-      isActive: true,
-      role: UserRole.USER,
-      createdAt: new Date().toISOString(),
-    };
-    this.users.push(newUser);
-    return newUser;
+    if (result.affected === 0) {
+      throw new NotFoundException(`Kullanıcı bulunamadı. ID: ${id}`);
+    }
   }
 }

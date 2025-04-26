@@ -36,3 +36,5 @@ bootstrap().catch((err) => {
   const logger = new Logger('Bootstrap');
   logger.error('Uygulama başlatılamadı', err);
 });
+
+console.log('******************** process.env > ', process.env);
