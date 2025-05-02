@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { PaginationParams } from '../common/types/pagination.type';
+import { PaginationParams } from '../common/types/types';
 export interface PaginatedProducts {
   products: Product[];
   total: number;

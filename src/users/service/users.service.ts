@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { PaginationParams } from '../../common/types/pagination.type';
+import { PaginationParams } from '../../common/types/types';
 import { EntityManager, Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -29,10 +29,6 @@ export class UsersService {
     page = 0,
     sort = 'id',
   }: PaginationParams) {
-    // const users = await this.entityManager.find(User, {
-    //   where: { isActive: true },
-    //   order: { id: 'ASC' },
-    // });
     const offset = page * limit;
 
     const users = await this.userRepository

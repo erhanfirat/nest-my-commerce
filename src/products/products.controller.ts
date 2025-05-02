@@ -14,7 +14,7 @@ import {
 import { ProductsService, PaginatedProducts } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { PaginationParams } from '../common/types/pagination.type';
+import { PaginationParams } from '../common/types/types';
 import { ParseIntPipe } from '@nestjs/common';
 import { CapitalizeNamePipe } from '../common/pipes/capitalize-name.pipe';
 import { AdminGuard } from '../auth/guards/admin.guard';

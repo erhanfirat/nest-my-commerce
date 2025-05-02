@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { PaginationParams } from '../../common/types/pagination.type';
+import { PaginationParams } from '../../common/types/types';
 import { ParseIntPipe } from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
 
