@@ -1,110 +1,61 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Header,
-  HttpCode,
-  HttpException,
-  HttpStatus,
-  Param,
-  ParseIntPipe,
   Post,
+  Put,
+  Delete,
+  Body,
+  Param,
   Query,
-  Req,
-  Res,
-  UseGuards,
-  UseInterceptors,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
-import { SortOrder } from 'src/common/utils/types';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { PaginationParams } from '../../common/types/pagination.type';
+import { ParseIntPipe } from '@nestjs/common';
 import { CreateUserDto } from '../dto/CreateUserDto';
-import { Request, Response } from 'express';
-import { APP_AUTHOR, APP_VERSION } from 'src/common/constants/app-info';
-import { ConvertIsoToDatePipe } from '../pipe/convert-iso-to-date.pipe';
-import { SuperAdminGuard } from '../../auth/guards/super-admin.guard';
-import { ResponseInterceptor } from '../interceptor/response.interceptor';
-import { ConfigService } from '@nestjs/config';
 
-@Controller('users') // localhost:3000/users
+@Controller('users')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private configService: ConfigService,
-  ) {
-    // this.usersService = usersService;
-  }
+  constructor(private readonly usersService: UsersService) {}
 
-  @Get() // localhost:3000/users/1/5/name/asc
-  @UseInterceptors(ResponseInterceptor)
-  @Header('X-App-Version', APP_VERSION)
-  @Header('X-Powered-By', APP_AUTHOR)
-  getAllUsers(
-    @Query('page', ParseIntPipe) page: number,
-    @Query('limit', ParseIntPipe) limit: number,
-    @Query('sort') sort: string,
-    @Query('order') order: SortOrder,
-  ) {
-    console.log(
-      'DATABASE_URL > ',
-      this.configService.get<string>('DATABASE_URL'),
-      process.env.DATABASE_URL,
-    );
-
-    return this.usersService.getAllUsers({ page, limit, sort, order });
-  }
-
-  @Get(':id/comments/:commentId') // localhost:3000/users/1/comments
-  getUserComments(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('commentId', ParseIntPipe) commentId: number,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
-    console.log('id', id);
-    console.log('commentId', commentId);
-    const result = this.usersService.getUserComments(id);
-    if (!result) {
-      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
-    }
-
-    res.status(200).json(result);
+  @Get()
+  async findAll(@Query() query: PaginationParams) {
+    const users = await this.usersService.findAll({
+      page: query.page ? parseInt(String(query.page), 10) : 1,
+      limit: query.limit ? parseInt(String(query.limit), 10) : 10,
+      sort: query.sort || 'id',
+      order: query.order || 'ASC',
+    });
+    return users;
   }
 
   @Get(':id')
-  getUserById(@Param('id', ParseIntPipe) id: number) {
-    const user = this.usersService.getUserById(id);
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
-    }
-    return user;
-  }
-
-  @Delete(':id')
-  @UseGuards(SuperAdminGuard)
-  deleteUserById(@Param('id', ParseIntPipe) id: number) {
-    const user = this.usersService.deleteUserById(id);
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
-    }
-    return user;
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findOne(id);
   }
 
   @Post('register')
-  @HttpCode(201)
-  createUser(
-    @Body('birthdate', ConvertIsoToDatePipe) birthdate: Date,
-    @Body() body: Omit<CreateUserDto, 'birthDate'>,
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
+
+  @Put(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
-    const newUser = { ...body, birthdate };
-    console.log('birthdate', birthdate);
-    console.log('newUser', newUser);
-    console.log('typeof newUser.birthdate', typeof newUser.birthdate);
-    console.log(
-      'newUser.birthdate instanceof Date',
-      newUser.birthdate instanceof Date,
-    );
-    const user = this.usersService.createUser(newUser);
+    return this.usersService.update(id, {
+      ...updateUserDto,
+    });
+  }
+
+  @Delete(':id')
+  // @UseGuards(SuperAdminGuard)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const user = await this.usersService.remove(id);
     return user;
   }
 }

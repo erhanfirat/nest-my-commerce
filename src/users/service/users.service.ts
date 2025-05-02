@@ -1,67 +1,113 @@
-import { Injectable } from '@nestjs/common';
-import { dummyUsers } from 'src/common/utils/data';
-import { PaginationOptions } from 'src/common/utils/types';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { User } from '../entities/user.entity';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { PaginationParams } from '../../common/types/pagination.type';
+import { EntityManager, Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/CreateUserDto';
-import { UserRole, UserType } from '../utils/types';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserResponseDto } from '../dto/user-response.dto';
 
-// DB ye bağlan
+export interface PaginatedUsers {
+  users: User[];
+  total: number;
+  page: number;
+  limit: number;
+}
 
 @Injectable()
 export class UsersService {
-  private users = [...dummyUsers];
+  constructor(
+    private readonly entityManager: EntityManager,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+  ) {}
 
-  private randomNumber = Math.floor(Math.random() * 1000); // 1330
+  private readonly logger = new Logger(UsersService.name);
 
-  getAllUsers({ page = 0, limit = 5, sort, order = 'asc' }: PaginationOptions) {
-    const startIndex = page * limit;
-    const endIndex = startIndex + limit;
+  async findAll({
+    limit = 5,
+    order = 'ASC',
+    page = 0,
+    sort = 'id',
+  }: PaginationParams) {
+    // const users = await this.entityManager.find(User, {
+    //   where: { isActive: true },
+    //   order: { id: 'ASC' },
+    // });
+    const offset = page * limit;
 
-    let sortedUsers = [...this.users];
+    const users = await this.userRepository
+      .createQueryBuilder('user')
+      .orderBy(`user.${sort}`, order.toUpperCase() as 'ASC' | 'DESC')
+      .skip(offset)
+      .take(limit)
+      .getMany();
 
-    if (sort) {
-      const direction = order === 'asc' ? 1 : -1;
-      sortedUsers = sortedUsers.sort((a, b) => {
-        return a[sort] > b[sort] ? direction : -direction;
-      });
-    }
-
-    return sortedUsers.slice(startIndex, endIndex);
+    return users.map(
+      (user) =>
+        new UserResponseDto({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          birthdate: user.birthdate,
+        }),
+    );
   }
 
-  getUserComments(id: number) {
-    const user = this.getUserById(id);
+  async findOne(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+
     if (!user) {
-      return null;
+      this.logger.error(`Kullanıcı bulunamadı: ${id}`);
+      throw new HttpException(
+        `Kullanıcı bulunamadı: ${id}`,
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return { user, comments: ['comment1', 'comment2', 'comment3'] };
+
+    const userResponse = new UserResponseDto({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      birthdate: user.birthdate,
+    });
+
+    return userResponse;
   }
 
-  getUserById(id: number) {
-    const user = this.users.find((user) => user.id === id);
-    return user;
+  async create(createUserDto: CreateUserDto) {
+    const newUser = new User(createUserDto);
+    const savedUser = await this.entityManager.save(User, newUser);
+    this.logger.log(`Kullanıcı oluşturuldu: ${savedUser.id}`);
+    return savedUser;
   }
 
-  deleteUserById(id: number) {
-    const user = this.getUserById(id);
-    if (user) {
-      this.users = this.users.filter((user) => user.id !== id);
-      return user;
+  update(id: number, updateUserDto: UpdateUserDto) {}
+
+  async remove(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      this.logger.error(`Kullanıcı bulunamadı: ${id}`);
+      throw new HttpException(
+        `Kullanıcı bulunamadı: ${id}`,
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return null;
-  }
 
-  createUser(user: CreateUserDto) {
-    // DB ye ekle
-    const newUser: UserType = {
-      id: Math.round(Math.random() * 10000000),
-      ...user,
-      birthdate: user.birthdate.toISOString().split('T')[0],
-      // "2000-10-20T00:00:00.000Z".split("T") => ["2000-10-20", "00:00:00.000Z"][0] => "2000-10-20"
-      isActive: true,
-      role: UserRole.USER,
-      createdAt: new Date().toISOString(),
-    };
-    this.users.push(newUser);
-    return newUser;
+    const userResponse = new UserResponseDto({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      birthdate: user.birthdate,
+    });
+
+    this.userRepository.delete(id);
+    this.logger.log(`Kullanıcı silindi: ${id}`, userResponse);
+
+    return userResponse;
   }
 }

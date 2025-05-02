@@ -3,8 +3,6 @@ import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PaginationParams } from '../common/types/pagination.type';
-import { dummyProducts } from '../common/utils/data';
-
 export interface PaginatedProducts {
   products: Product[];
   total: number;
@@ -17,43 +15,6 @@ export class ProductsService {
   private readonly logger = new Logger(ProductsService.name);
   private products: Product[] = [];
   private nextId = 1;
-
-  constructor() {
-    this.loadDummyData();
-  }
-
-  private loadDummyData(): void {
-    try {
-      // dummyProducts içerisindeki veri formatını Product entity formatına dönüştürüyoruz
-      this.products = dummyProducts.map((product, index: number) => {
-        return {
-          id: product.id || index + 1,
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          stock: product.stock,
-          imageUrl:
-            product.images && product.images.length > 0
-              ? product.images[0].url
-              : undefined,
-          category: product.category_id
-            ? `Kategori ${product.category_id}`
-            : undefined,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-      });
-
-      this.nextId = Math.max(...this.products.map((product) => product.id)) + 1;
-      this.logger.log(`${this.products.length} ürün yüklendi`);
-    } catch (error) {
-      this.logger.error(
-        'Dummy ürün verileri yüklenemedi',
-        error instanceof Error ? error.stack : '',
-      );
-      this.products = [];
-    }
-  }
 
   findAll(params: PaginationParams): PaginatedProducts {
     const { page = 1, limit = 10, sort = 'id', order = 'ASC' } = params;
@@ -94,15 +55,8 @@ export class ProductsService {
   }
 
   create(createProductDto: CreateProductDto): Product {
-    const newProduct: Product = {
-      id: this.nextId++,
-      ...createProductDto,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    const newProduct: Product = new Product(createProductDto);
 
-    this.products.push(newProduct);
-    this.logger.log(`Yeni ürün oluşturuldu, ID: ${newProduct.id}`);
     return newProduct;
   }
 

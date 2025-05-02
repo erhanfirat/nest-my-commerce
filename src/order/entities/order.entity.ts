@@ -1,13 +1,23 @@
-export class Order {
-  id: number;
-  userId: number;
-  products: {
-    productId: number;
-    quantity: number;
-    price: number;
-  }[];
-  totalAmount: number;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
+import { BaseEntity } from 'src/common/entities/BaseEntity';
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { OrderItem } from './order-item.entity';
+
+@Entity('orders')
+export class Order extends BaseEntity {
+  @Column()
+  totalPrice: number;
+
+  @ManyToOne(() => User, (user) => user.orders, { onDelete: 'CASCADE' })
+  user: User;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
+    onDelete: 'CASCADE',
+  })
+  items: OrderItem[];
+
+  constructor(dto: Partial<Order>) {
+    super();
+    Object.assign(this, { ...dto });
+  }
 }
