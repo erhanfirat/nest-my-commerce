@@ -2,7 +2,14 @@ export interface PaginationParams {
   page?: number;
   limit?: number;
   sort?: string;
-  order?: 'ASC' | 'DESC';
+  order?: SortOrder;
+}
+
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export interface ApiResponse<T> {
@@ -17,11 +24,4 @@ export interface ApiErrorResponse {
   message: string;
 }
 
-export type SortOrder = 'asc' | 'desc';
-
-export type PaginationOptions = {
-  page: number;
-  limit: number;
-  sort: string;
-  order: SortOrder;
-};
+export type SortOrder = 'ASC' | 'DESC';
