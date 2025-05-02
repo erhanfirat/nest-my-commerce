@@ -5,7 +5,7 @@ import { OrderItem } from './order-item.entity';
 
 @Entity('orders')
 export class Order extends BaseEntity {
-  @Column()
+  @Column({ name: 'total_price', type: 'decimal', precision: 10, scale: 2 })
   totalPrice: number;
 
   @ManyToOne(() => User, (user) => user.orders, { onDelete: 'CASCADE' })

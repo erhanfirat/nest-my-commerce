@@ -83,7 +83,7 @@ export class UsersService {
     return savedUser;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {}
+  // update(id: number, updateUserDto: UpdateUserDto) {}
 
   async remove(id: number) {
     const user = await this.userRepository.findOne({
@@ -105,7 +105,7 @@ export class UsersService {
       birthdate: user.birthdate,
     });
 
-    this.userRepository.delete(id);
+    await this.userRepository.delete(id);
     this.logger.log(`Kullanıcı silindi: ${id}`, userResponse);
 
     return userResponse;

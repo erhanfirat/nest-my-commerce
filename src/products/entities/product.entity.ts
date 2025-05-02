@@ -15,7 +15,7 @@ export class Product extends BaseEntityWithName {
   @Column({ type: 'int', default: 0 })
   stock: number;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ name: 'is_active', type: 'boolean', default: false })
   isActive: boolean;
 
   @OneToMany(() => ProductImage, (productImage) => productImage.product)
@@ -24,7 +24,7 @@ export class Product extends BaseEntityWithName {
   @ManyToOne(() => User, (user) => user.productsSold, { onDelete: 'SET NULL' })
   seller: User;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ name: 'is_deleted', type: 'boolean', default: false })
   isDeleted: boolean;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.product)

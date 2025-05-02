@@ -12,7 +12,7 @@ export class User extends BaseEntityWithName {
   @Column({ type: 'varchar', length: 100, unique: false })
   password: string;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ name: 'is_active', type: 'boolean', default: false })
   isActive: boolean;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
