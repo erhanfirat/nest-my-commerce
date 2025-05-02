@@ -110,4 +110,25 @@ export class UsersService {
 
     return userResponse;
   }
+
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      this.logger.error(`Kullanıcı bulunamadı: ${id}`);
+      throw new HttpException(
+        `Kullanıcı bulunamadı: ${id}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const updatedUser = Object.assign(user, updateUserDto);
+    await this.userRepository.save(updatedUser);
+
+    this.logger.log(`Kullanıcı güncellendi: ${id}`, updatedUser);
+
+    return updatedUser;
+  }
 }
