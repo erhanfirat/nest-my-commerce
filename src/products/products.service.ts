@@ -9,6 +9,7 @@ import {
   PaginationParams,
   SortOrder,
 } from '../common/types/types';
+import { ProductResponseDto } from './dto/product-response.dto';
 
 @Injectable()
 export class ProductsService {
@@ -19,14 +20,19 @@ export class ProductsService {
     private readonly productRepository: Repository<Product>,
   ) {}
 
-  async findAll(params: PaginationParams): Promise<PaginatedResult<Product>> {
+  async findAll(
+    params: PaginationParams,
+  ): Promise<PaginatedResult<ProductResponseDto>> {
     const { page = 1, limit = 10, sort = 'id', order = 'ASC' } = params;
 
-    const [data, total] = await this.productRepository.findAndCount({
+    const [products, total] = await this.productRepository.findAndCount({
+      relations: ['images'],
       order: { [sort]: order.toUpperCase() as SortOrder },
       skip: (page - 1) * limit,
       take: limit,
     });
+
+    const data = products.map((product) => new ProductResponseDto(product));
 
     return {
       data,

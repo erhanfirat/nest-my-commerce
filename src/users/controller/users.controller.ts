@@ -9,19 +9,24 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { PaginationParams } from '../../common/types/types';
+import { PaginatedResult, PaginationParams } from '../../common/types/types';
 import { ParseIntPipe } from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { SuperAdminGuard } from 'src/auth/guards/super-admin.guard';
+import { UserResponseDto } from '../dto/user-response.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async findAll(@Query() query: PaginationParams) {
+  async findAll(
+    @Query() query: PaginationParams,
+  ): Promise<PaginatedResult<UserResponseDto>> {
     const users = await this.usersService.findAll({
       page: query.page ? parseInt(String(query.page), 10) : 1,
       limit: query.limit ? parseInt(String(query.limit), 10) : 10,
@@ -43,6 +48,7 @@ export class UsersController {
   }
 
   @Put(':id')
+  @UseGuards(SuperAdminGuard)
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
@@ -53,7 +59,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  // @UseGuards(SuperAdminGuard)
+  //@UseGuards(SuperAdminGuard)
   async remove(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.remove(id);
     return user;
