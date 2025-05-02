@@ -14,7 +14,7 @@ import { UsersService } from '../service/users.service';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { PaginationParams } from '../../common/types/pagination.type';
 import { ParseIntPipe } from '@nestjs/common';
-import { CreateUserDto } from '../dto/CreateUserDto';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {

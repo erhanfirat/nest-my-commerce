@@ -3,7 +3,7 @@ import { User } from '../entities/user.entity';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { PaginationParams } from '../../common/types/pagination.type';
 import { EntityManager, Repository } from 'typeorm';
-import { CreateUserDto } from '../dto/CreateUserDto';
+import { CreateUserDto } from '../dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserResponseDto } from '../dto/user-response.dto';
 
