@@ -1,12 +1,12 @@
 import { BaseEntityWithName } from 'src/common/entities/BaseEntityWithName';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { ProductImage } from './product-image.entity';
 import { User } from 'src/users/entities/user.entity';
 import { OrderItem } from 'src/order/entities/order-item.entity';
 
 @Entity('products')
 export class Product extends BaseEntityWithName {
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'varchar', length: 255, unique: false })
   description: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
@@ -22,6 +22,7 @@ export class Product extends BaseEntityWithName {
   images: ProductImage[];
 
   @ManyToOne(() => User, (user) => user.productsSold, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'seller_id' })
   seller: User;
 
   @Column({ name: 'is_deleted', type: 'boolean', default: false })

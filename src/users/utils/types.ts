@@ -1,9 +1,9 @@
 export enum UserRole {
-  SUPER_ADMIN = 1,
-  ADMIN = 2,
-  USER = 3,
-  SELLER = 4,
-  GUEST = 5,
+  SUPER_ADMIN,
+  ADMIN,
+  SELLER,
+  USER,
+  GUEST,
 }
 
 export type UserType = {
