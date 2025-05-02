@@ -81,14 +81,14 @@ export class UsersService {
     return this.toUserResponseDto(user);
   }
 
-  private toUserResponseDto(user: User): UserResponseDto {
+  private toUserResponseDto = (user: User): UserResponseDto => {
     return new UserResponseDto({
       id: user.id,
       name: user.name,
       email: user.email,
       birthdate: user.birthdate,
     });
-  }
+  };
 
   private async getUserOrThrow(id: number): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
