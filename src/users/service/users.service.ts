@@ -1,130 +1,106 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { User } from '../entities/user.entity';
-import { UpdateUserDto } from '../dto/update-user.dto';
-import { PaginationParams } from '../../common/types/types';
-import { EntityManager, Repository } from 'typeorm';
-import { CreateUserDto } from '../dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserResponseDto } from '../dto/user-response.dto';
+import { EntityManager, Repository } from 'typeorm';
 
-export interface PaginatedUsers {
-  users: User[];
-  total: number;
-  page: number;
-  limit: number;
-}
+import { User } from '../entities/user.entity';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { UserResponseDto } from '../dto/user-response.dto';
+import {
+  PaginationParams,
+  PaginatedResult,
+  SortOrder,
+} from '../../common/types/types';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly entityManager: EntityManager,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
-
   private readonly logger = new Logger(UsersService.name);
 
-  async findAll({
-    limit = 5,
-    order = 'ASC',
-    page = 0,
-    sort = 'id',
-  }: PaginationParams) {
-    const offset = page * limit;
+  constructor(
+    private readonly entityManager: EntityManager,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-    const users = await this.userRepository
-      .createQueryBuilder('user')
-      .orderBy(`user.${sort}`, order.toUpperCase() as 'ASC' | 'DESC')
-      .skip(offset)
-      .take(limit)
-      .getMany();
+  async findAll(
+    params: PaginationParams,
+  ): Promise<PaginatedResult<UserResponseDto>> {
+    const { page = 1, limit = 10, sort = 'id', order = 'ASC' } = params;
 
-    return users.map(
-      (user) =>
-        new UserResponseDto({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          birthdate: user.birthdate,
-        }),
-    );
+    const [users, total] = await this.userRepository.findAndCount({
+      order: { [sort]: order.toUpperCase() as SortOrder },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    const data = users.map(this.toUserResponseDto);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
   }
 
-  async findOne(id: number) {
-    const user = await this.userRepository.findOne({
-      where: { id },
-    });
-
-    if (!user) {
-      this.logger.error(`Kullanıcı bulunamadı: ${id}`);
-      throw new HttpException(
-        `Kullanıcı bulunamadı: ${id}`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    const userResponse = new UserResponseDto({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      birthdate: user.birthdate,
-    });
-
-    return userResponse;
+  async findOne(id: number): Promise<UserResponseDto> {
+    const user = await this.getUserOrThrow(id);
+    return this.toUserResponseDto(user);
   }
 
-  async create(createUserDto: CreateUserDto) {
-    const newUser = new User(createUserDto);
-    const savedUser = await this.entityManager.save(User, newUser);
-    this.logger.log(`Kullanıcı oluşturuldu: ${savedUser.id}`);
-    return savedUser;
+  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+    const newUser = this.userRepository.create(createUserDto);
+    const savedUser = await this.userRepository.save(newUser);
+
+    this.logger.log(`✅ Kullanıcı oluşturuldu (ID: ${savedUser.id})`);
+
+    return this.toUserResponseDto(savedUser);
   }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {}
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseDto> {
+    const user = await this.getUserOrThrow(id);
 
-  async remove(id: number) {
-    const user = await this.userRepository.findOne({
-      where: { id },
-    });
+    const updatedUser = this.userRepository.merge(user, updateUserDto);
+    const savedUser = await this.userRepository.save(updatedUser);
 
-    if (!user) {
-      this.logger.error(`Kullanıcı bulunamadı: ${id}`);
-      throw new HttpException(
-        `Kullanıcı bulunamadı: ${id}`,
-        HttpStatus.NOT_FOUND,
-      );
-    }
+    this.logger.log(`✏️ Kullanıcı güncellendi (ID: ${id})`);
 
-    const userResponse = new UserResponseDto({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      birthdate: user.birthdate,
-    });
+    return this.toUserResponseDto(savedUser);
+  }
+
+  async remove(id: number): Promise<UserResponseDto> {
+    const user = await this.getUserOrThrow(id);
 
     await this.userRepository.delete(id);
-    this.logger.log(`Kullanıcı silindi: ${id}`, userResponse);
 
-    return userResponse;
+    this.logger.log(`🗑️ Kullanıcı silindi (ID: ${id})`);
+
+    return this.toUserResponseDto(user);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepository.findOne({
-      where: { id },
+  private toUserResponseDto(user: User): UserResponseDto {
+    return new UserResponseDto({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      birthdate: user.birthdate,
     });
+  }
+
+  private async getUserOrThrow(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
-      this.logger.error(`Kullanıcı bulunamadı: ${id}`);
+      this.logger.warn(`⚠️ Kullanıcı bulunamadı (ID: ${id})`);
       throw new HttpException(
-        `Kullanıcı bulunamadı: ${id}`,
+        `Kullanıcı bulunamadı (ID: ${id})`,
         HttpStatus.NOT_FOUND,
       );
     }
 
-    const updatedUser = Object.assign(user, updateUserDto);
-    await this.userRepository.save(updatedUser);
-
-    this.logger.log(`Kullanıcı güncellendi: ${id}`, updatedUser);
-
-    return updatedUser;
+    return user;
   }
 }
