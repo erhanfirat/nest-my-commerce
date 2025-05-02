@@ -16,3 +16,12 @@ export interface ApiErrorResponse {
   timestamp: string;
   message: string;
 }
+
+export type SortOrder = 'asc' | 'desc';
+
+export type PaginationOptions = {
+  page: number;
+  limit: number;
+  sort: string;
+  order: SortOrder;
+};
