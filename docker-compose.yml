@@ -33,6 +33,16 @@ services:
       - commerce-network
     restart: unless-stopped
 
+  mongo:
+    image: mongo
+    container_name: mongo-db
+    ports:
+      - '27017:27017'
+    networks:
+      - commerce-network
+    volumes:
+      - mongo-data:/data/db
+
   nest-app:
     container_name: nest-app
     build:
@@ -64,3 +74,4 @@ networks:
 volumes:
   pgdata:
   pgadmin:
+  mongo-data:
