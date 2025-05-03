@@ -1,34 +1,51 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { UserRole } from 'src/users/utils/types';
-
-interface AuthUser {
-  id: number;
-  email: string;
-  role: UserRole;
-}
+import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/service/users.service';
+import { LoginDto } from './dto/login.dto';
+import { JwtPayload } from './utils/types';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
+
   private readonly logger = new Logger(AuthService.name);
 
-  validateUser(email: string, password: string): AuthUser {
-    // Normalde veritabanında arama yapılacak, burada örnek olarak:
-    if (email === 'admin@example.com' && password === 'admin123') {
-      this.logger.log(`Kullanıcı giriş yaptı: ${email}`);
-      return { id: 1, email, role: UserRole.ADMIN };
-    }
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<Partial<User> | null> {
+    const user = await this.usersService.findByEmail(email);
 
-    if (email === 'super@example.com' && password === 'super123') {
-      this.logger.log(`Kullanıcı giriş yaptı: ${email}`);
-      return { id: 2, email, role: UserRole.SUPER_ADMIN };
+    if (user && password === user.password) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...result } = user;
+      return result;
     }
+    return null;
+  }
 
-    if (email === 'user@example.com' && password === 'user123') {
-      this.logger.log(`Kullanıcı giriş yaptı: ${email}`);
-      return { id: 3, email, role: UserRole.USER };
+  async login(loginDto: LoginDto) {
+    const user = await this.usersService.findByEmail(loginDto.email);
+    if (!user || loginDto.password !== user.password) {
+      throw new UnauthorizedException('Geçersiz e-posta veya şifre');
     }
-
-    throw new UnauthorizedException('Geçersiz email veya şifre');
+    const payload: JwtPayload = {
+      email: user.email,
+      sub: user.id,
+      role: user.role,
+    };
+    return {
+      access_token: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+    };
   }
 
   // Diğer auth metodları eklenebilir

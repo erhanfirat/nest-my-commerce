@@ -33,6 +33,16 @@ services:
       - commerce-network
     restart: unless-stopped
 
+  mongo:
+    image: mongo
+    container_name: mongo-db
+    ports:
+      - '27017:27017'
+    networks:
+      - commerce-network
+    volumes:
+      - mongo-data:/data/db
+
   nest-app:
     container_name: nest-app
     build:
@@ -46,14 +56,26 @@ services:
       - node_modules:/usr/src/app/node_modules
     depends_on:
       - postgres
+      - mongo
     environment:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
     networks:
       - commerce-network
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    ports:
+      - '8081:8081'
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=secret
 
 networks:
   commerce-network:
@@ -62,4 +84,5 @@ networks:
 volumes:
   pgdata:
   pgadmin:
+  mongo-data:
   node_modules:

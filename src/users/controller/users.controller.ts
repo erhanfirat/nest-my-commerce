@@ -10,7 +10,6 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
-  Res,
 } from '@nestjs/common';
 import { UsersService } from '../service/users.service';
 import { UpdateUserDto } from '../dto/update-user.dto';
@@ -19,12 +18,18 @@ import { ParseIntPipe } from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { SuperAdminGuard } from 'src/auth/guards/super-admin.guard';
 import { UserResponseDto } from '../dto/user-response.dto';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { UserRole } from '../utils/types';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
   async findAll(
     @Query() query: PaginationParams,
   ): Promise<PaginatedResult<UserResponseDto>> {
@@ -60,7 +65,8 @@ export class UsersController {
   }
 
   @Delete(':id')
-  //@UseGuards(SuperAdminGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.SUPER_ADMIN)
   async remove(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.remove(id);
     return user;

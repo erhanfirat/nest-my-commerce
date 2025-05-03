@@ -48,6 +48,11 @@ export class UsersService {
     return this.toUserResponseDto(user);
   }
 
+  async findByEmail(email: string): Promise<User | null> {
+    this.logger.log(`Finding user by email: ${email}`);
+    return this.userRepository.findOne({ where: { email } });
+  }
+
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     const newUser = this.userRepository.create(createUserDto);
     const savedUser = await this.userRepository.save(newUser);
@@ -87,6 +92,7 @@ export class UsersService {
       name: user.name,
       email: user.email,
       birthdate: user.birthdate,
+      role: user.role,
     });
   };
 
