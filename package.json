@@ -19,9 +19,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "dock:build": "docker-compose --env-file .env up --build",
-    "dock:up": "docker-compose --env-file .env up",
-    "dock:hard-reset": "docker-compose down --volumes --remove-orphans && npm run dock:build"
+    "docker:build": "docker-compose --env-file .env up --build",
+    "docker:up": "docker-compose --env-file .env up",
+    "docker:refresh": "docker-compose build nest-app && npm run docker:up",
+    "docker:node-reset": "docker compose down && docker volume rm my-commerce_node_modules && npm run docker:up",
+    "docker:hard-reset": "docker-compose down --volumes --remove-orphans && npm run docker:build"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
