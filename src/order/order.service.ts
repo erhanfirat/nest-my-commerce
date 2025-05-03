@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+// import { UpdateOrderDto } from './dto/update-order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
@@ -24,7 +24,7 @@ export class OrderService {
     private readonly productRepository: Repository<Product>,
   ) {}
 
-  async createOrder(dto: CreateOrderDto): Promise<Order> {
+  async createOrder(dto: CreateOrderDto): Promise<Order | null> {
     const user = await this.userRepository.findOneByOrFail({ id: dto.userId });
     const order = this.orderRepository.create({
       totalPrice: dto.totalPrice,
@@ -62,7 +62,7 @@ export class OrderService {
     });
   }
 
-  async findOne(id: number): Promise<Order> {
+  async findOne(id: number): Promise<Order | null> {
     return this.orderRepository.findOne({
       where: { id },
       relations: ['items', 'items.product', 'user'],

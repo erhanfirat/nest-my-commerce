@@ -17,7 +17,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  async create(@Body() dto: CreateOrderDto): Promise<Order> {
+  async create(@Body() dto: CreateOrderDto): Promise<Order | null> {
     return this.orderService.createOrder(dto);
   }
 
@@ -27,7 +27,7 @@ export class OrderController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Order> {
+  async findOne(@Param('id') id: string): Promise<Order | null> {
     return this.orderService.findOne(Number(id));
   }
 
