@@ -1,3 +1,10 @@
+import { Request } from 'express';
+import { UserResponseDto } from 'src/users/dto/user-response.dto'; // varsa bunu kullan, yoksa Partial<User> da olur
+
+export interface RequestWithUser extends Request {
+  user: UserResponseDto; // veya: Partial<User>
+}
+
 export interface PaginationParams {
   page?: number;
   limit?: number;

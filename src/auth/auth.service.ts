@@ -4,6 +4,7 @@ import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/service/users.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtPayload } from './utils/types';
+import { UserResponseDto } from 'src/users/dto/user-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -48,5 +49,10 @@ export class AuthService {
     };
   }
 
-  // Diğer auth metodları eklenebilir
+  generateJwtToken(user: Partial<UserResponseDto>) {
+    const payload = { sub: user.id, email: user.email, role: user.role };
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
+  }
 }
