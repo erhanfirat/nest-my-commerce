@@ -40,7 +40,7 @@ export class AuthService {
       role: user.role,
     };
     return {
-      access_token: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload),
       user: {
         id: user.id,
         email: user.email,
@@ -52,7 +52,12 @@ export class AuthService {
   generateJwtToken(user: Partial<UserResponseDto>) {
     const payload = { sub: user.id, email: user.email, role: user.role };
     return {
-      accessToken: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
     };
   }
 }
