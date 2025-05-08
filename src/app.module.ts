@@ -10,6 +10,7 @@ import { OrderModule } from './order/order.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CartModule } from './cart/cart.module';
 import { ProductCommentModule } from './product-comment/product-comment.module';
+import { UserVisitModule } from './user-visit/user-visit.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { ProductCommentModule } from './product-comment/product-comment.module';
     }),
     CartModule,
     ProductCommentModule,
+    UserVisitModule,
   ],
 })
 export class AppModule {}
