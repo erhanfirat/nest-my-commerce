@@ -6,7 +6,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import {
   PaginatedResult,
-  PaginationParams,
+  SearchablePaginationParams,
   SortOrder,
 } from '../common/types/types';
 import { ProductResponseDto } from './dto/product-response.dto';
@@ -21,16 +21,34 @@ export class ProductsService {
   ) {}
 
   async findAll(
-    params: PaginationParams,
+    params: SearchablePaginationParams,
   ): Promise<PaginatedResult<ProductResponseDto>> {
-    const { page = 1, limit = 10, sort = 'id', order = 'ASC' } = params;
+    const {
+      page = 1,
+      limit = 10,
+      sort = 'id',
+      order = 'ASC',
+      search = '',
+    } = params;
 
-    const [products, total] = await this.productRepository.findAndCount({
-      relations: ['images'],
-      order: { [sort]: order.toUpperCase() as SortOrder },
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+    const query = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.images', 'images')
+      .orderBy(`product.${sort}`, order.toUpperCase() as SortOrder)
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    // Arama filtresi
+    if (search) {
+      query.where(
+        'product.name ILIKE :search OR product.description ILIKE :search',
+        {
+          search: `%${search}%`,
+        },
+      );
+    }
+
+    const [products, total] = await query.getManyAndCount();
 
     const data = products.map((product) => new ProductResponseDto(product));
 

@@ -47,7 +47,7 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Post('register')
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);

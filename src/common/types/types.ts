@@ -12,6 +12,10 @@ export interface PaginationParams {
   order?: SortOrder;
 }
 
+export interface SearchablePaginationParams extends PaginationParams {
+  search: string;
+}
+
 export interface PaginatedResult<T> {
   data: T[];
   total: number;

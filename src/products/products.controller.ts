@@ -17,7 +17,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import {
   PaginatedResult,
-  PaginationParams,
+  SearchablePaginationParams,
   SortOrder,
 } from '../common/types/types';
 import { CapitalizeNamePipe } from '../common/pipes/capitalize-name.pipe';
@@ -30,14 +30,15 @@ export class ProductsController {
 
   @Get()
   async findAll(
-    @Query() query: PaginationParams,
+    @Query() query: SearchablePaginationParams,
   ): Promise<PaginatedResult<ProductResponseDto>> {
     const page = Number(query.page) || 1;
     const limit = Number(query.limit) || 10;
     const sort = query.sort || 'id';
     const order = (query.order || 'asc').toUpperCase() as SortOrder;
+    const search = '';
 
-    return this.productsService.findAll({ page, limit, sort, order });
+    return this.productsService.findAll({ page, limit, sort, order, search });
   }
 
   @Get(':id')
