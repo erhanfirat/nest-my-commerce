@@ -4,15 +4,8 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
+import { RequestWithUser } from 'src/common/types/types';
 import { UserRole } from 'src/users/utils/types';
-
-interface RequestUser {
-  role?: UserRole;
-}
-
-interface RequestWithUser extends Request {
-  user?: RequestUser;
-}
 
 @Injectable()
 export class SuperAdminGuard implements CanActivate {

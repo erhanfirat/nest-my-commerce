@@ -1,8 +1,8 @@
 import { Request } from 'express';
-import { UserResponseDto } from 'src/users/dto/user-response.dto'; // varsa bunu kullan, yoksa Partial<User> da olur
+import { User } from 'src/users/entities/user.entity';
 
 export interface RequestWithUser extends Request {
-  user: UserResponseDto; // veya: Partial<User>
+  user: Partial<User>;
 }
 
 export interface PaginationParams {

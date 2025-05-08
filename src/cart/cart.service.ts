@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Cart, CartDocument } from './schema/cart.schema';
@@ -57,5 +57,24 @@ export class CartService {
 
   async clearCart(userId: number) {
     return this.cartModel.deleteOne({ userId });
+  }
+
+  async removeItemFromCart(userId: number, productId: number) {
+    const cart = await this.cartModel.findOne({ userId });
+
+    if (!cart) {
+      throw new NotFoundException('Sepet bulunamadı');
+    }
+
+    const updatedItems = cart.items.filter(
+      (item) => item.productId !== productId,
+    );
+
+    if (updatedItems.length === cart.items.length) {
+      throw new NotFoundException('Sepette böyle bir ürün yok');
+    }
+
+    cart.items = updatedItems;
+    return cart.save();
   }
 }
