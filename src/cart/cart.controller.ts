@@ -23,27 +23,22 @@ export class CartController {
 
   @UseGuards(JwtAuthGuard)
   @Post('add')
-  async addToCart(@Body() dto: AddToCartDto, @Req() req) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  async addToCart(@Body() dto: AddToCartDto, @Req() req: RequestWithUser) {
     dto.userId = (req.user as UserResponseDto).id;
     return this.cartService.addToCart(dto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  getCart(@Req() req) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  getCart(@Req() req: RequestWithUser) {
     const userId = (req.user as UserResponseDto).id;
-
     return this.cartService.getCart(userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete()
-  clearCart(@Req() req) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  clearCart(@Req() req: RequestWithUser) {
     const userId = (req.user as UserResponseDto).id;
-
     return this.cartService.clearCart(userId);
   }
 

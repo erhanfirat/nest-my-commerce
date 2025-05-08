@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Req,
   UnauthorizedException,
@@ -29,7 +30,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('refresh')
+  @Get('me')
   refreshToken(@Req() req: RequestWithUser) {
     const user = req.user as Partial<UserResponseDto>;
     return this.authService.generateJwtToken(user);

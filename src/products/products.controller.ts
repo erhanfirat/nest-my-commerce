@@ -21,8 +21,11 @@ import {
   SortOrder,
 } from '../common/types/types';
 import { CapitalizeNamePipe } from '../common/pipes/capitalize-name.pipe';
-import { AdminGuard } from '../auth/guards/admin.guard';
 import { ProductResponseDto } from './dto/product-response.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { UserRole } from 'src/users/utils/types';
 
 @Controller('products')
 export class ProductsController {
@@ -47,14 +50,16 @@ export class ProductsController {
   }
 
   @Post()
-  //@UseGuards(AdminGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)
   @HttpCode(HttpStatus.CREATED)
   async create(@Body(CapitalizeNamePipe) createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
 
   @Put(':id')
-  @UseGuards(AdminGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body(CapitalizeNamePipe) updateProductDto: UpdateProductDto,
@@ -63,7 +68,8 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  //@UseGuards(AdminGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.productsService.remove(id);

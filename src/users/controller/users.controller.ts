@@ -16,12 +16,12 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { PaginatedResult, PaginationParams } from '../../common/types/types';
 import { ParseIntPipe } from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { SuperAdminGuard } from 'src/auth/guards/super-admin.guard';
 import { UserResponseDto } from '../dto/user-response.dto';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { UserRole } from '../utils/types';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { OwnerOrRolesGuard } from 'src/auth/guards/owner-or-roles.guard';
 
 @Controller('users')
 export class UsersController {
@@ -54,7 +54,8 @@ export class UsersController {
   }
 
   @Put(':id')
-  @UseGuards(SuperAdminGuard)
+  @UseGuards(JwtAuthGuard, OwnerOrRolesGuard)
+  @Roles(UserRole.SUPER_ADMIN)
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,

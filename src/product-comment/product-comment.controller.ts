@@ -12,6 +12,7 @@ import { ProductCommentService } from './product-comment.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ProductCommentDto } from './dto/product-comment.dto';
 import { UserResponseDto } from 'src/users/dto/user-response.dto';
+import { RequestWithUser } from 'src/common/types/types';
 
 @Controller('product-comment')
 export class ProductCommentController {
@@ -24,10 +25,11 @@ export class ProductCommentController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  add(@Body() productCommentDto: ProductCommentDto, @Req() req) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const user = req.user as UserResponseDto;
-    productCommentDto.userId = user.id;
+  add(
+    @Body() productCommentDto: ProductCommentDto,
+    @Req() req: RequestWithUser,
+  ) {
+    productCommentDto.userId = (req.user as UserResponseDto).id;
     return this.productCommentService.addComment(productCommentDto);
   }
 }

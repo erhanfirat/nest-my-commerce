@@ -1,8 +1,10 @@
 import { Request } from 'express';
 import { User } from 'src/users/entities/user.entity';
+import { UserRole } from 'src/users/utils/types';
 
 export interface RequestWithUser extends Request {
   user: Partial<User>;
+  role: UserRole;
 }
 
 export interface PaginationParams {
