@@ -1,105 +1,67 @@
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Product } from '../../../products-microservice/src/products/entities/product.entity';
-import { CreateProductDto } from '@ecommerce/types/products/dto/create-product.dto';
-import { UpdateProductDto } from '@ecommerce/types/products/dto/update-product.dto';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { Injectable, Logger, Inject } from '@nestjs/common';
+import { CreateProductDto, UpdateProductDto } from '@ecommerce/types';
+
 import {
-  PaginatedResult,
+  PRODUCT_PATTERNS,
   SearchablePaginationParams,
-  SortOrder,
-} from '../common/types/types';
-import { ProductResponseDto } from '@ecommerce/types/products/dto/product-response.dto';
+  SERVICES,
+} from '@ecommerce/types';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class ProductsService {
   private readonly logger = new Logger(ProductsService.name);
 
   constructor(
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
+    @Inject(SERVICES.PRODUCTS.name)
+    private readonly productsMicroservice: ClientProxy,
   ) {}
 
-  async findAll(
-    params: SearchablePaginationParams,
-  ): Promise<PaginatedResult<ProductResponseDto>> {
-    const {
-      page = 1,
-      limit = 10,
-      sort = 'id',
-      order = 'ASC',
-      search = '',
-    } = params;
-
-    const query = this.productRepository
-      .createQueryBuilder('product')
-      .leftJoinAndSelect('product.images', 'images')
-      .orderBy(`product.${sort}`, order.toUpperCase() as SortOrder)
-      .skip((page - 1) * limit)
-      .take(limit);
-
-    // Arama filtresi
-    if (search) {
-      query.where(
-        'product.name ILIKE :search OR product.description ILIKE :search',
-        {
-          search: `%${search}%`,
-        },
-      );
-    }
-
-    const [products, total] = await query.getManyAndCount();
-
-    const data = products.map((product) => new ProductResponseDto(product));
-
-    return {
-      data,
-      total,
-      page,
-      limit,
-    };
+  findAll({
+    page = 1,
+    limit = 10,
+    sort = 'id',
+    order = 'ASC',
+    search = '',
+  }: SearchablePaginationParams) {
+    return this.productsMicroservice.send(
+      { cmd: PRODUCT_PATTERNS.FIND_ALL },
+      {
+        page,
+        limit,
+        sort,
+        order,
+        search,
+      },
+    );
   }
 
-  async findOne(id: number): Promise<Product> {
-    const product = await this.productRepository.findOne({ where: { id } });
-
-    if (!product) {
-      throw new NotFoundException(`${id} ID'li ürün bulunamadı`);
-    }
-
-    return product;
+  findOne(id: number) {
+    return this.productsMicroservice.send(
+      { cmd: PRODUCT_PATTERNS.FIND_ONE },
+      { id },
+    );
   }
 
-  async create(createProductDto: CreateProductDto): Promise<Product> {
-    const product = this.productRepository.create({
-      ...createProductDto,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    return await this.productRepository.save(product);
+  create(createProductDto: CreateProductDto) {
+    return this.productsMicroservice.send(
+      { cmd: PRODUCT_PATTERNS.CREATE },
+      createProductDto,
+    );
   }
 
-  async update(
-    id: number,
-    updateProductDto: UpdateProductDto,
-  ): Promise<Product> {
-    const product = await this.findOne(id);
-
-    const updatedProduct = this.productRepository.merge(product, {
-      ...updateProductDto,
-      updatedAt: new Date(),
-    });
-
-    this.logger.log(`${id} ID'li ürün güncellendi`);
-
-    return await this.productRepository.save(updatedProduct);
+  update(id: number, updateProductDto: UpdateProductDto) {
+    return this.productsMicroservice.send(
+      { cmd: PRODUCT_PATTERNS.UPDATE },
+      { id, ...updateProductDto },
+    );
   }
 
-  async remove(id: number): Promise<void> {
-    const product = await this.findOne(id);
-    await this.productRepository.remove(product);
-
-    this.logger.log(`${id} ID'li ürün silindi`);
+  remove(id: number) {
+    return this.productsMicroservice.send(
+      { cmd: PRODUCT_PATTERNS.REMOVE },
+      { id },
+    );
   }
 }

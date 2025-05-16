@@ -4,20 +4,20 @@ import { ProductsService } from './products.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from 'src/users/users.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { SERVICES } from '@ecommerce/types';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: 'PRODUCTS_MICROSERVICE',
+        name: SERVICES.PRODUCTS.name,
         transport: Transport.TCP,
         options: {
-          host: 'products-microservice',
-          port: 3024,
+          host: SERVICES.PRODUCTS.host,
+          port: SERVICES.PRODUCTS.port,
         },
       },
     ]),
-
     UsersModule,
   ],
   controllers: [ProductsController],

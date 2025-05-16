@@ -3,6 +3,7 @@
 export * from "./common/types";
 export * from "./common/BaseEntity";
 export * from "./common/BaseEntityWithName";
+export * from "./common/constants.ts";
 
 // Auth
 

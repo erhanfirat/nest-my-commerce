@@ -13,14 +13,12 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from '@ecommerce/types/products/dto/create-product.dto';
-import { UpdateProductDto } from '@ecommerce/types/products/dto/update-product.dto';
 import { CapitalizeNamePipe } from '../common/pipes/capitalize-name.pipe';
-import { ProductResponseDto } from '@ecommerce/types/products/dto/product-response.dto';
 import {
-  PaginatedResult,
   SearchablePaginationParams,
   UserRole,
+  CreateProductDto,
+  UpdateProductDto,
 } from '@ecommerce/types';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -31,9 +29,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  async findAll(
-    @Query() query: SearchablePaginationParams,
-  ): Promise<PaginatedResult<ProductResponseDto>> {
+  findAll(@Query() query: SearchablePaginationParams) {
     const page = query?.page || 1;
     const limit = query?.limit || 10;
     const sort = query.sort || 'id';
@@ -44,7 +40,7 @@ export class ProductsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);
   }
 
@@ -52,14 +48,14 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body(CapitalizeNamePipe) createProductDto: CreateProductDto) {
+  create(@Body(CapitalizeNamePipe) createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)
-  async update(
+  update(
     @Param('id', ParseIntPipe) id: number,
     @Body(CapitalizeNamePipe) updateProductDto: UpdateProductDto,
   ) {
@@ -70,7 +66,7 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SELLER)
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    await this.productsService.remove(id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.remove(id);
   }
 }

@@ -7,7 +7,7 @@ export const SERVICES = {
   USERS: {
     name: "USERS_MICROSERVICE",
     host: "users_microservice",
-    port: 3021,
+    port: 3020,
   },
   AUTH: {
     name: "AUTH_MICROSERVICE",

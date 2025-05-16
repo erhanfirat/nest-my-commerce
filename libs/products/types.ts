@@ -6,3 +6,17 @@ export const PRODUCT_PATTERNS = {
   UPDATE: "Products.Update",
   REMOVE: "Products.Remove",
 };
+
+export type ProductImageType = {
+  id: number;
+  url: string;
+};
+
+export type ProductType = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  images: ProductImageType[];
+  stock: number;
+};

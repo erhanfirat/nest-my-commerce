@@ -2,16 +2,17 @@ import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { SERVICES } from '@ecommerce/types';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: 'USERS_MICROSERVICE',
+        name: SERVICES.USERS.name,
         transport: Transport.TCP,
         options: {
-          host: 'users-microservice',
-          port: 3020,
+          host: SERVICES.USERS.host,
+          port: SERVICES.USERS.port,
         },
       },
     ]),

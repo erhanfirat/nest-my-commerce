@@ -3,6 +3,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import {
   CreateUserDto,
   PaginationParams,
+  SERVICES,
   UpdateUserDto,
   USER_PATTERNS,
 } from '@ecommerce/types';
@@ -10,7 +11,7 @@ import {
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject('USERS_MICROSERVICE')
+    @Inject(SERVICES.USERS.name)
     private readonly usersMicroservice: ClientProxy,
   ) {}
 

@@ -22,6 +22,6 @@ async function bootstrap() {
   );
 
   await app.listen();
-  console.log('Users Microservice 3020 portunda hazır ve nazır beklemektedir!');
+  console.log(`Products Microservice ${port} portunda çalışıyor!`);
 }
 bootstrap();

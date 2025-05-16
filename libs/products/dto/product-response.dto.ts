@@ -1,4 +1,4 @@
-import { Product } from "../../../products-microservice/src/products/entities/product.entity";
+import { ProductType } from "../types";
 
 export class ProductResponseDto {
   id: number;
@@ -8,12 +8,12 @@ export class ProductResponseDto {
   images: string[];
   stock: number;
 
-  constructor(product: Product) {
+  constructor(product: ProductType) {
     this.id = product.id;
     this.name = product.name;
     this.description = product.description;
     this.price = product.price;
     this.stock = product.stock;
-    this.images = product.images?.map((img) => img.url); // örneğin sadece url dönüyoruz
+    this.images = product.images?.map((img) => img.url);
   }
 }
