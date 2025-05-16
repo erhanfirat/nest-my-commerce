@@ -1,11 +1,11 @@
-import { AUTH_PATTERNS, LoginDto } from '@ecommerce/types';
+import { AUTH_PATTERNS, LoginDto, SERVICES } from '@ecommerce/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { RequestUser } from 'src/common/types/types';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject('AUTH_MICROSERVICE') private readonly authMicroservice: ClientProxy,
+    @Inject(SERVICES.AUTH.name) private readonly authMicroservice: ClientProxy,
   ) {}
 
   login(loginDto: LoginDto) {

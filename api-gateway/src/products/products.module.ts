@@ -4,9 +4,11 @@ import { ProductsService } from './products.service';
 import { UsersModule } from 'src/users/users.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { SERVICES } from '@ecommerce/types';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     ClientsModule.register([
       {
         name: SERVICES.PRODUCTS.name,

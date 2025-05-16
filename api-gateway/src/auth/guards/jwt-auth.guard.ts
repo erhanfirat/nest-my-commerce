@@ -1,4 +1,4 @@
-import { AUTH_PATTERNS, JwtPayload } from '@ecommerce/types';
+import { AUTH_PATTERNS, JwtPayload, SERVICES } from '@ecommerce/types';
 import {
   CanActivate,
   ExecutionContext,
@@ -7,11 +7,13 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { RequestUser, RequestWithUser } from 'src/common/types/types';
+import { RequestWithUser } from 'src/common/types/types';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(@Inject('AUTH_SERVICE') private authMicroservice: ClientProxy) {}
+  constructor(
+    @Inject(SERVICES.AUTH.name) private authMicroservice: ClientProxy,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<RequestWithUser>();

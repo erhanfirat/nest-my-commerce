@@ -5,11 +5,12 @@ services:
     container_name: nest-users-pg-db
     restart: always
     ports:
-      - "${USERS_POSTGRES_PORT}:5432"
+      - "${USERS_POSTGRES_PORT_CONTAINER}:${USERS_POSTGRES_PORT}"
     environment:
       POSTGRES_USER: ${USERS_POSTGRES_USER}
       POSTGRES_PASSWORD: ${USERS_POSTGRES_PASSWORD}
       POSTGRES_DB: ${USERS_POSTGRES_DB}
+      POSTGRES_PORT: ${USERS_POSTGRES_PORT}
     volumes:
       - users-pg-data:/var/lib/postgresql/data
     networks:
@@ -29,11 +30,12 @@ services:
     container_name: nest-products-pg-db
     restart: always
     ports:
-      - "${PRODUCTS_POSTGRES_PORT}:5432"
+      - "${PRODUCTS_POSTGRES_PORT_CONTAINER}:${PRODUCTS_POSTGRES_PORT}"
     environment:
       POSTGRES_USER: ${PRODUCTS_POSTGRES_USER}
       POSTGRES_PASSWORD: ${PRODUCTS_POSTGRES_PASSWORD}
       POSTGRES_DB: ${PRODUCTS_POSTGRES_DB}
+      POSTGRES_PORT: ${PRODUCTS_POSTGRES_PORT}
     volumes:
       - products-pg-data:/var/lib/postgresql/data
     networks:
@@ -84,6 +86,7 @@ services:
     depends_on:
       - users-microservice
       - auth-microservice
+      - products-microservice
 
 networks:
   aye-network:
