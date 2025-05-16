@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { AddToCartDto } from './dto/cart.dto';
 import { CartService } from './cart.service';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth_old/guards/jwt-auth.guard';
 import { UserResponseDto } from 'src/users/dto/user-response.dto';
 import { RequestWithUser } from 'src/common/types/types';
 

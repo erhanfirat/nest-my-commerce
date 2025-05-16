@@ -22,9 +22,9 @@ import {
 } from '../common/types/types';
 import { CapitalizeNamePipe } from '../common/pipes/capitalize-name.pipe';
 import { ProductResponseDto } from './dto/product-response.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Roles } from 'src/auth/decorator/roles.decorator';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { JwtAuthGuard } from 'src/auth_old/guards/jwt-auth.guard';
+import { Roles } from 'src/auth_old/decorator/roles.decorator';
+import { RolesGuard } from 'src/auth_old/guards/roles.guard';
 import { UserRole } from 'src/users/utils/types';
 
 @Controller('products')

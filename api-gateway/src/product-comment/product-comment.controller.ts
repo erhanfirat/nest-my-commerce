@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ProductCommentService } from './product-comment.service';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth_old/guards/jwt-auth.guard';
 import { ProductCommentDto } from './dto/product-comment.dto';
 import { UserResponseDto } from 'src/users/dto/user-response.dto';
 import { RequestWithUser } from 'src/common/types/types';

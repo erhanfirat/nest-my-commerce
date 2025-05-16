@@ -17,11 +17,11 @@ import { PaginatedResult, PaginationParams } from '../../common/types/types';
 import { ParseIntPipe } from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UserResponseDto } from '../dto/user-response.dto';
-import { Roles } from 'src/auth/decorator/roles.decorator';
+import { Roles } from 'src/auth_old/decorator/roles.decorator';
 import { UserRole } from '../utils/types';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { OwnerOrRolesGuard } from 'src/auth/guards/owner-or-roles.guard';
+import { RolesGuard } from 'src/auth_old/guards/roles.guard';
+import { JwtAuthGuard } from 'src/auth_old/guards/jwt-auth.guard';
+import { OwnerOrRolesGuard } from 'src/auth_old/guards/owner-or-roles.guard';
 
 @Controller('users')
 export class UsersController {

@@ -1,63 +1,20 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/service/users.service';
-import { LoginDto } from './dto/login.dto';
-import { JwtPayload } from './utils/types';
+import { LoginDto } from '@ecommerce/types';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { UserResponseDto } from 'src/users/dto/user-response.dto';
-
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
+    @Inject('AUTH_MICROSERVICE') private readonly authMicroservice: ClientProxy,
   ) {}
 
-  private readonly logger = new Logger(AuthService.name);
+  login(loginDto: LoginDto) {
+    console.log('API GATEWAY > Service > login ', loginDto);
 
-  async validateUser(
-    email: string,
-    password: string,
-  ): Promise<Partial<User> | null> {
-    const user = await this.usersService.findByEmail(email);
-
-    if (user && password === user.password) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
-      return result;
-    }
-    return null;
-  }
-
-  async login(loginDto: LoginDto) {
-    const user = await this.usersService.findByEmail(loginDto.email);
-    if (!user || loginDto.password !== user.password) {
-      throw new UnauthorizedException('Geçersiz e-posta veya şifre');
-    }
-    const payload: JwtPayload = {
-      email: user.email,
-      sub: user.id,
-      role: user.role,
-    };
-    return {
-      token: this.jwtService.sign(payload),
-      user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      },
-    };
+    return this.authMicroservice.send({ cmd: 'auth.login' }, loginDto);
   }
 
   generateJwtToken(user: Partial<UserResponseDto>) {
-    const payload = { sub: user.id, email: user.email, role: user.role };
-    return {
-      token: this.jwtService.sign(payload),
-      user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      },
-    };
+    return this.authMicroservice.send({ cmd: 'auth.me' }, user);
   }
 }

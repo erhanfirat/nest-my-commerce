@@ -1,4 +1,4 @@
-import { UserRole } from '../utils/types';
+import { UserRole } from "../types/users";
 
 export class UserResponseDto {
   id: number;
@@ -14,4 +14,8 @@ export class UserResponseDto {
 
 export class UserDto extends UserResponseDto {
   password: string;
+
+  constructor(partial: Partial<UserResponseDto>) {
+    super(partial);
+  }
 }

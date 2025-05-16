@@ -1,9 +1,7 @@
+import { LoginDto, UserDto, UserResponseDto } from '@ecommerce/types';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from './utils/types';
-import { UserDto, UserResponseDto } from './dto/user-response.dto';
 import { ClientProxy } from '@nestjs/microservices';
-import { LoginDto } from './dto/login.dto';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
@@ -31,20 +29,22 @@ export class AppService {
   }
 
   async login(loginDto: LoginDto) {
-    console.log('AUTH MICROSERVICE > Service > login ', loginDto);
-
     const user = await this.validateUser(loginDto.email, loginDto.password);
 
     const responseUser = new UserResponseDto(user);
 
-    const payload: JwtPayload = {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-    };
+    return this.generateJwtToken(responseUser);
+  }
+
+  generateJwtToken(user: Partial<UserResponseDto>) {
+    const payload = { sub: user.id, email: user.email, role: user.role };
     return {
       token: this.jwtService.sign(payload),
-      user: responseUser,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
     };
   }
 
