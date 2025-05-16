@@ -1,3 +1,4 @@
+import { ApiErrorResponse } from '@ecommerce/types';
 import {
   ExceptionFilter,
   Catch,
@@ -5,7 +6,6 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { ApiErrorResponse } from '../types/types';
 
 interface HttpExceptionResponse {
   message: string;
