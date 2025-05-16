@@ -1,4 +1,4 @@
-import { LoginDto } from '@ecommerce/types';
+import { AUTH_PATTERNS, LoginDto } from '@ecommerce/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserResponseDto } from 'src/users/dto/user-response.dto';
@@ -11,10 +11,10 @@ export class AuthService {
   login(loginDto: LoginDto) {
     console.log('API GATEWAY > Service > login ', loginDto);
 
-    return this.authMicroservice.send({ cmd: 'auth.login' }, loginDto);
+    return this.authMicroservice.send({ cmd: AUTH_PATTERNS.LOGIN }, loginDto);
   }
 
   generateJwtToken(user: Partial<UserResponseDto>) {
-    return this.authMicroservice.send({ cmd: 'auth.me' }, user);
+    return this.authMicroservice.send({ cmd: AUTH_PATTERNS.ME }, user);
   }
 }

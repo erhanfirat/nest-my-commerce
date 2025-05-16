@@ -28,4 +28,4 @@ export interface ApiErrorResponse {
   message: string;
 }
 
-export type SortOrder = 'ASC' | 'DESC';
+export type SortOrder = "ASC" | "DESC";

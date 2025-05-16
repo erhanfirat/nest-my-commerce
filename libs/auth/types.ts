@@ -5,3 +5,8 @@ export interface JwtPayload {
   email: string;
   role: UserRole;
 }
+
+export const AUTH_PATTERNS = {
+  LOGIN: "Auth.Login",
+  ME: "Auth.Me",
+};

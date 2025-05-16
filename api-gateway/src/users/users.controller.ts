@@ -11,17 +11,20 @@ import {
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from '../service/users.service';
-import { UpdateUserDto } from '../dto/update-user.dto';
-import { PaginatedResult, PaginationParams } from '../../common/types/types';
 import { ParseIntPipe } from '@nestjs/common';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UserResponseDto } from '../dto/user-response.dto';
 import { Roles } from 'src/auth_old/decorator/roles.decorator';
-import { UserRole } from '../utils/types';
 import { RolesGuard } from 'src/auth_old/guards/roles.guard';
 import { JwtAuthGuard } from 'src/auth_old/guards/jwt-auth.guard';
 import { OwnerOrRolesGuard } from 'src/auth_old/guards/owner-or-roles.guard';
+import { UsersService } from './users.service';
+import {
+  CreateUserDto,
+  PaginatedResult,
+  PaginationParams,
+  UpdateUserDto,
+  UserResponseDto,
+  UserRole,
+} from '@ecommerce/types';
 
 @Controller('users')
 export class UsersController {
@@ -30,16 +33,15 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
-  async findAll(
+  findAll(
     @Query() query: PaginationParams,
   ): Promise<PaginatedResult<UserResponseDto>> {
-    const users = await this.usersService.findAll({
-      page: query.page ? parseInt(String(query.page), 10) : 1,
-      limit: query.limit ? parseInt(String(query.limit), 10) : 10,
+    return this.usersService.findAll({
+      page: query.page ? query.page : 1,
+      limit: query.limit ? query.limit : 10,
       sort: query.sort || 'id',
       order: query.order || 'ASC',
     });
-    return users;
   }
 
   @Get(':id')
@@ -68,8 +70,7 @@ export class UsersController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.SUPER_ADMIN)
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    const user = await this.usersService.remove(id);
-    return user;
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.remove(id);
   }
 }

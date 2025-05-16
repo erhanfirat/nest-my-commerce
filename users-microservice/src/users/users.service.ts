@@ -1,11 +1,15 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { PaginatedResult, PaginationParams, SortOrder } from './utils/types';
-import { UserResponseDto } from './dto/user-response.dto';
+import {
+  CreateUserDto,
+  PaginatedResult,
+  PaginationParams,
+  SortOrder,
+  UpdateUserDto,
+  UserResponseDto,
+} from '@ecommerce/types';
 
 @Injectable()
 export class UsersService {
@@ -16,8 +20,13 @@ export class UsersService {
 
   private readonly logger = new Logger(UsersService.name);
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    const newUser = this.userRepository.create(createUserDto);
+    const savedUser = await this.userRepository.save(newUser);
+
+    this.logger.log(`✅ Kullanıcı oluşturuldu (ID: ${savedUser.id})`);
+
+    return this.toUserResponseDto(savedUser);
   }
 
   async findAll(
@@ -46,17 +55,30 @@ export class UsersService {
     return this.userRepository.findOne({ where: { email } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    const user = await this.getUserOrThrow(id);
+    return this.toUserResponseDto(user);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.getUserOrThrow(id);
+
+    const updatedUser = this.userRepository.merge(user, updateUserDto);
+    const savedUser = await this.userRepository.save(updatedUser);
+
+    this.logger.log(`✏️ Kullanıcı güncellendi (ID: ${id})`);
+
+    return this.toUserResponseDto(savedUser);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const user = await this.getUserOrThrow(id);
+
+    await this.userRepository.delete(id);
+
+    this.logger.log(`🗑️ Kullanıcı silindi (ID: ${id})`);
+
+    return this.toUserResponseDto(user);
   }
 
   private toUserResponseDto = (user: User): UserResponseDto => {

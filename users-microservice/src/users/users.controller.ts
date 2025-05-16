@@ -1,36 +1,39 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginationParams, USER_PATTERNS } from './utils/types';
+import {
+  CreateUserDto,
+  PaginationParams,
+  UpdateUserDto,
+  USER_PATTERNS,
+} from '@ecommerce/types';
 
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @MessagePattern({ cmd: USER_PATTERNS.Create })
+  @MessagePattern({ cmd: USER_PATTERNS.CREATE })
   create(@Payload() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
-  @MessagePattern({ cmd: USER_PATTERNS.FindAll })
+  @MessagePattern({ cmd: USER_PATTERNS.FIND_ALL })
   findAll(@Payload() paginationParams: PaginationParams) {
     console.log('users-service controller findAll', paginationParams);
     return this.usersService.findAll(paginationParams);
   }
 
-  @MessagePattern({ cmd: USER_PATTERNS.FindOne })
+  @MessagePattern({ cmd: USER_PATTERNS.FIND_ONE })
   findOne(@Payload() id: number) {
     return this.usersService.findOne(id);
   }
 
-  @MessagePattern({ cmd: USER_PATTERNS.FindByEmail })
+  @MessagePattern({ cmd: USER_PATTERNS.FIND_BY_EMAIL })
   findByEmail(@Payload() email: string) {
     return this.usersService.findByEmail(email);
   }
 
-  @MessagePattern({ cmd: USER_PATTERNS.Update })
+  @MessagePattern({ cmd: USER_PATTERNS.UPDATE })
   update(
     @Payload()
     { id, updateUserDto }: { id: number; updateUserDto: UpdateUserDto },
@@ -38,7 +41,7 @@ export class UsersController {
     return this.usersService.update(id, updateUserDto);
   }
 
-  @MessagePattern({ cmd: USER_PATTERNS.Remove })
+  @MessagePattern({ cmd: USER_PATTERNS.REMOVE })
   remove(@Payload() id: number) {
     return this.usersService.remove(id);
   }
