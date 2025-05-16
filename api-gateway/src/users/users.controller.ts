@@ -12,19 +12,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ParseIntPipe } from '@nestjs/common';
-import { Roles } from 'src/auth_old/decorator/roles.decorator';
-import { RolesGuard } from 'src/auth_old/guards/roles.guard';
-import { JwtAuthGuard } from 'src/auth_old/guards/jwt-auth.guard';
-import { OwnerOrRolesGuard } from 'src/auth_old/guards/owner-or-roles.guard';
 import { UsersService } from './users.service';
 import {
   CreateUserDto,
-  PaginatedResult,
   PaginationParams,
   UpdateUserDto,
-  UserResponseDto,
   UserRole,
 } from '@ecommerce/types';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { OwnerOrRolesGuard } from 'src/auth/guards/owner-or-roles.guard';
 
 @Controller('users')
 export class UsersController {
@@ -33,9 +31,7 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
-  findAll(
-    @Query() query: PaginationParams,
-  ): Promise<PaginatedResult<UserResponseDto>> {
+  findAll(@Query() query: PaginationParams) {
     return this.usersService.findAll({
       page: query.page ? query.page : 1,
       limit: query.limit ? query.limit : 10,

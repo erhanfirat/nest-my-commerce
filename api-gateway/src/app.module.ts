@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { PaymentModule } from './payment/payment.module';
-import { AuthModule } from './auth_old/auth.module';
 import { SharedModule } from './common/shared.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,6 +10,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CartModule } from './cart/cart.module';
 import { ProductCommentModule } from './product-comment/product-comment.module';
 import { UserVisitModule } from './user-visit/user-visit.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [

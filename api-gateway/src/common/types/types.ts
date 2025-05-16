@@ -1,6 +1,12 @@
-import { UserDto, UserRole } from '@ecommerce/types';
+import { UserRole } from '@ecommerce/types';
 import { Request } from 'express';
 export interface RequestWithUser extends Request {
-  user: Partial<UserDto>;
+  user: RequestUser;
   role: UserRole;
 }
+
+export type RequestUser = {
+  id: number;
+  email: string;
+  role: UserRole;
+};

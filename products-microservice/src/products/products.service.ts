@@ -7,6 +7,8 @@ import {
   PaginatedResult,
   ProductResponseDto,
   SearchablePaginationParams,
+  SortOrder,
+  UpdateProductDto,
 } from '@ecommerce/types';
 
 @Injectable()
@@ -71,8 +73,6 @@ export class ProductsService {
   async create(createProductDto: CreateProductDto): Promise<Product> {
     const product = this.productRepository.create({
       ...createProductDto,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
 
     return await this.productRepository.save(product);
@@ -84,10 +84,10 @@ export class ProductsService {
   ): Promise<Product> {
     const product = await this.findOne(id);
 
-    const updatedProduct = this.productRepository.merge(product, {
-      ...updateProductDto,
-      updatedAt: new Date(),
-    });
+    const updatedProduct = this.productRepository.merge(
+      product,
+      updateProductDto,
+    );
 
     this.logger.log(`${id} ID'li ürün güncellendi`);
 

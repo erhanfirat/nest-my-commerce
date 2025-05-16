@@ -48,7 +48,7 @@ export class UsersService {
   update(id: number, updateUserDto: UpdateUserDto) {
     return this.usersMicroservice.send(
       { cmd: USER_PATTERNS.UPDATE },
-      { id, ...updateUserDto },
+      { ...updateUserDto, id },
     );
   }
 

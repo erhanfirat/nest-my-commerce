@@ -1,15 +1,17 @@
 import { BaseEntity } from 'src/common/entities/BaseEntity';
-import { Product } from '../../../../products-microservice/src/products/entities/product.entity';
 import { Order } from './order.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity('order_items')
 export class OrderItem extends BaseEntity {
-  @ManyToOne(() => Product, (product) => product.orderItems, {
-    onDelete: 'CASCADE',
-    eager: true,
-  })
-  product: Product;
+  // @ManyToOne(() => Product, (product) => product.orderItems, {
+  //   onDelete: 'CASCADE',
+  //   eager: true,
+  // })
+  // product: Product;
+
+  @Column({ type: 'int' })
+  productId: number;
 
   @ManyToOne(() => Order, (order) => order.items, {
     eager: true,

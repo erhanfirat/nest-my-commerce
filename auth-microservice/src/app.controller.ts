@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { AUTH_PATTERNS } from '@ecommerce/types';
+import { AUTH_PATTERNS, JwtPayload } from '@ecommerce/types';
 
 @Controller()
 export class AppController {
@@ -14,8 +14,13 @@ export class AppController {
     return this.authService.login(data);
   }
 
-  @MessagePattern({ cmd: 'auth.verify' })
+  @MessagePattern({ cmd: AUTH_PATTERNS.VERIFY })
   verify(@Payload() token: string) {
     return this.authService.verify(token);
+  }
+
+  @MessagePattern({ cmd: AUTH_PATTERNS.ME })
+  me(@Payload() user: JwtPayload) {
+    return this.authService.me(user);
   }
 }

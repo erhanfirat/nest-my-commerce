@@ -5,9 +5,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UserRole } from 'src/users/utils/types';
 import { ROLES_KEY } from '../decorator/roles.decorator';
-import { User } from 'src/users/entities/user.entity';
+import { UserRole, UserType } from '@ecommerce/types';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -25,9 +24,7 @@ export class RolesGuard implements CanActivate {
     // JWT -> Request Autherization header
     const { user } = context
       .switchToHttp()
-      .getRequest<Request & { user: User }>();
-
-    console.log('user > ', user);
+      .getRequest<Request & { user: UserType }>();
 
     if (!requiredRoles.includes(user.role)) {
       throw new ForbiddenException('Yetkiniz bulunmamaktadır.');

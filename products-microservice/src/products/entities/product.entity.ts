@@ -1,8 +1,6 @@
-import { BaseEntityWithName } from 'src/common/entities/BaseEntityWithName';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { ProductImage } from './product-image.entity';
-import { User } from 'src/users/entities/user.entity';
-import { OrderItem } from 'src/order/entities/order-item.entity';
+import { BaseEntityWithName } from '@ecommerce/types';
 
 @Entity('products')
 export class Product extends BaseEntityWithName {
@@ -21,15 +19,8 @@ export class Product extends BaseEntityWithName {
   @OneToMany(() => ProductImage, (productImage) => productImage.product)
   images: ProductImage[];
 
-  @ManyToOne(() => User, (user) => user.productsSold, { onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'seller_id' })
-  seller: User;
-
   @Column({ name: 'is_deleted', type: 'boolean', default: false })
   isDeleted: boolean;
-
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
-  orderItems: OrderItem[];
 
   constructor(productDTO: Partial<Product>) {
     super();

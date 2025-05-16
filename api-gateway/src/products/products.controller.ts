@@ -19,6 +19,7 @@ import {
   UserRole,
   CreateProductDto,
   UpdateProductDto,
+  SortOrder,
 } from '@ecommerce/types';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';

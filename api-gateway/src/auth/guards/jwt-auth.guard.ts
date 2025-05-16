@@ -1,3 +1,4 @@
+import { AUTH_PATTERNS, JwtPayload } from '@ecommerce/types';
 import {
   CanActivate,
   ExecutionContext,
@@ -6,8 +7,7 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { RequestWithUser } from 'src/common/types/types';
-import { UserResponseDto } from 'src/users/dto/user-response.dto';
+import { RequestUser, RequestWithUser } from 'src/common/types/types';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -20,10 +20,14 @@ export class JwtAuthGuard implements CanActivate {
 
     const token = authHeader.replace('Bearer ', '');
     try {
-      const user = await firstValueFrom<Partial<UserResponseDto>>(
-        this.authMicroservice.send({ cmd: 'auth.verify' }, token),
+      const userJwt = await firstValueFrom<JwtPayload>(
+        this.authMicroservice.send({ cmd: AUTH_PATTERNS.VERIFY }, token),
       );
-      req.user = user;
+      req.user = {
+        id: userJwt.sub,
+        email: userJwt.email,
+        role: userJwt.role,
+      };
       return true;
     } catch (err) {
       console.error('JwtAuthGuard err > ', err);

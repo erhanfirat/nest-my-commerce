@@ -1,5 +1,5 @@
+import { UserRole } from '@ecommerce/types';
 import { SetMetadata } from '@nestjs/common';
-import { UserRole } from 'src/users/utils/types';
 
 export const ROLES_KEY = 'roles';
 

@@ -17,8 +17,8 @@ services:
 
   users-microservice:
     build:
-      context: ./users-microservice
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./users-microservice/Dockerfile
     depends_on:
       - users-pg-db
     networks:
@@ -41,8 +41,8 @@ services:
 
   products-microservice:
     build:
-      context: ./products-microservice
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./products-microservice/Dockerfile
     depends_on:
       - products-pg-db
     networks:
@@ -66,8 +66,8 @@ services:
 
   auth-microservice:
     build:
-      context: ./auth-microservice
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./auth-microservice/Dockerfile
     depends_on:
       - users-microservice
     networks:
@@ -75,8 +75,8 @@ services:
 
   api-gateway:
     build:
-      context: ./api-gateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./api-gateway/Dockerfile
     ports:
       - "3000:3000"
     networks:

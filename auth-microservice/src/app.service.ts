@@ -1,4 +1,10 @@
-import { LoginDto, UserDto, UserResponseDto } from '@ecommerce/types';
+import {
+  JwtPayload,
+  LoginDto,
+  USER_PATTERNS,
+  UserDto,
+  UserResponseDto,
+} from '@ecommerce/types';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
@@ -15,7 +21,7 @@ export class AppService {
     const user: UserDto = await firstValueFrom(
       this.usersMicroservice.send(
         {
-          cmd: 'Users.FindByEmail',
+          cmd: USER_PATTERNS.FIND_BY_EMAIL,
         },
         email,
       ),
@@ -48,11 +54,25 @@ export class AppService {
     };
   }
 
-  verify(token: string) {
+  verify(token: string): JwtPayload {
     try {
-      return this.jwtService.verify(token);
+      return this.jwtService.verify<JwtPayload>(token); // JwtPayload Dönüyor
     } catch (e) {
       throw new UnauthorizedException();
     }
+  }
+
+  async me(jwtPayload: JwtPayload) {
+    const user: UserDto = await firstValueFrom(
+      this.usersMicroservice.send(
+        {
+          cmd: USER_PATTERNS.FIND_ONE,
+        },
+        jwtPayload.sub,
+      ),
+    );
+    const responseUser = new UserResponseDto(user);
+
+    return this.generateJwtToken(responseUser);
   }
 }

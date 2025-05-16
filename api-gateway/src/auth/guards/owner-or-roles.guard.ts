@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { RequestWithUser } from 'src/common/types/types';
-import { UserRole } from 'src/users/utils/types';
 import { ROLES_KEY } from '../decorator/roles.decorator';
+import { UserRole } from '@ecommerce/types';
 
 @Injectable()
 export class OwnerOrRolesGuard implements CanActivate {

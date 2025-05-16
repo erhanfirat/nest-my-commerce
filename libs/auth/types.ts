@@ -9,4 +9,5 @@ export interface JwtPayload {
 export const AUTH_PATTERNS = {
   LOGIN: "Auth.Login",
   ME: "Auth.Me",
+  VERIFY: "Auth.Verify",
 };
