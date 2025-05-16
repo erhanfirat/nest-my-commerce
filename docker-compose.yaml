@@ -1,0 +1,70 @@
+services:
+  # users için Postgre container kaldır
+  users-pg-db:
+    image: postgres:16
+    container_name: nest-users-pg-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${USERS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${USERS_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${USERS_POSTGRES_DB}
+    volumes:
+      - users-pg-data:/var/lib/postgresql/data
+    networks:
+      - aye-network
+
+  # pgadmin
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    restart: unless-stopped
+    networks:
+      - aye-network
+
+  users-microservice:
+    build:
+      context: ./users-microservice
+      dockerfile: Dockerfile
+    depends_on:
+      - users-pg-db
+    networks:
+      - aye-network
+
+  auth-microservice:
+    build:
+      context: ./auth-microservice
+      dockerfile: Dockerfile
+    depends_on:
+      - users-microservice
+    networks:
+      - aye-network
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - aye-network
+    depends_on:
+      - users-microservice
+      - auth-microservice
+
+networks:
+  aye-network:
+    driver: bridge
+
+volumes:
+  users-pg-data:
+  pgadmin:
