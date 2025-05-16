@@ -5,13 +5,46 @@ services:
     container_name: nest-users-pg-db
     restart: always
     ports:
-      - "5432:5432"
+      - "${USERS_POSTGRES_PORT}:5432"
     environment:
       POSTGRES_USER: ${USERS_POSTGRES_USER}
       POSTGRES_PASSWORD: ${USERS_POSTGRES_PASSWORD}
       POSTGRES_DB: ${USERS_POSTGRES_DB}
     volumes:
       - users-pg-data:/var/lib/postgresql/data
+    networks:
+      - aye-network
+
+  users-microservice:
+    build:
+      context: ./users-microservice
+      dockerfile: Dockerfile
+    depends_on:
+      - users-pg-db
+    networks:
+      - aye-network
+
+  products-pg-db:
+    image: postgres:16
+    container_name: nest-products-pg-db
+    restart: always
+    ports:
+      - "${PRODUCTS_POSTGRES_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${PRODUCTS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${PRODUCTS_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${PRODUCTS_POSTGRES_DB}
+    volumes:
+      - products-pg-data:/var/lib/postgresql/data
+    networks:
+      - aye-network
+
+  products-microservice:
+    build:
+      context: ./products-microservice
+      dockerfile: Dockerfile
+    depends_on:
+      - products-pg-db
     networks:
       - aye-network
 
@@ -26,17 +59,8 @@ services:
     volumes:
       - pgadmin:/var/lib/pgadmin
     ports:
-      - "${PGADMIN_PORT:-5050}:80"
+      - "${PGADMIN_PORT}:80"
     restart: unless-stopped
-    networks:
-      - aye-network
-
-  users-microservice:
-    build:
-      context: ./users-microservice
-      dockerfile: Dockerfile
-    depends_on:
-      - users-pg-db
     networks:
       - aye-network
 
@@ -67,4 +91,5 @@ networks:
 
 volumes:
   users-pg-data:
+  products-pg-data:
   pgadmin:
