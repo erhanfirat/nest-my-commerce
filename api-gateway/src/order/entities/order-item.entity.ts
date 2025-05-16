@@ -1,5 +1,5 @@
 import { BaseEntity } from 'src/common/entities/BaseEntity';
-import { Product } from 'src/products/entities/product.entity';
+import { Product } from '../../../../products-microservice/src/products/entities/product.entity';
 import { Order } from './order.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 

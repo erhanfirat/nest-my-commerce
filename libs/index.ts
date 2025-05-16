@@ -15,3 +15,10 @@ export * from "./users/types/users.ts";
 export * from "./users/dto/create-user.dto.ts";
 export * from "./users/dto/update-user.dto.ts";
 export * from "./users/dto/user-response.dto.ts";
+
+// Products
+
+export * from "./products/dto/create-product.dto";
+export * from "./products/dto/product-response.dto";
+export * from "./products/dto/update-product.dto";
+export * from "./products/types.ts";

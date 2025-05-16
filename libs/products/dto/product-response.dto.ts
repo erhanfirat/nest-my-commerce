@@ -1,4 +1,4 @@
-import { Product } from '../entities/product.entity';
+import { Product } from "../../../products-microservice/src/products/entities/product.entity";
 
 export class ProductResponseDto {
   id: number;

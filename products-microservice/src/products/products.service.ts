@@ -1,15 +1,8 @@
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Product } from '../../../products-microservice/src/products/entities/product.entity';
-import { CreateProductDto } from '@ecommerce/types/products/dto/create-product.dto';
-import { UpdateProductDto } from '@ecommerce/types/products/dto/update-product.dto';
-import {
-  PaginatedResult,
-  SearchablePaginationParams,
-  SortOrder,
-} from '../common/types/types';
-import { ProductResponseDto } from '@ecommerce/types/products/dto/product-response.dto';
+import { Injectable, Logger } from "@nestjs/common";
+import { Repository } from "typeorm";
+import { Product } from "./entities/product.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { PaginatedResult, SearchablePaginationParams } from "@ecommerce/types";
 
 @Injectable()
 export class ProductsService {

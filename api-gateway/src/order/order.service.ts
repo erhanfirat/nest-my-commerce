@@ -6,7 +6,7 @@ import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { OrderItem } from './entities/order-item.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Product } from 'src/products/entities/product.entity';
+import { Product } from '../../../products-microservice/src/products/entities/product.entity';
 
 @Injectable()
 export class OrderService {

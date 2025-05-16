@@ -13,19 +13,18 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDto } from '@ecommerce/types/products/dto/create-product.dto';
+import { UpdateProductDto } from '@ecommerce/types/products/dto/update-product.dto';
+import { CapitalizeNamePipe } from '../common/pipes/capitalize-name.pipe';
+import { ProductResponseDto } from '@ecommerce/types/products/dto/product-response.dto';
 import {
   PaginatedResult,
   SearchablePaginationParams,
-  SortOrder,
-} from '../common/types/types';
-import { CapitalizeNamePipe } from '../common/pipes/capitalize-name.pipe';
-import { ProductResponseDto } from './dto/product-response.dto';
-import { JwtAuthGuard } from 'src/auth_old/guards/jwt-auth.guard';
-import { Roles } from 'src/auth_old/decorator/roles.decorator';
-import { RolesGuard } from 'src/auth_old/guards/roles.guard';
-import { UserRole } from 'src/users/utils/types';
+  UserRole,
+} from '@ecommerce/types';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorator/roles.decorator';
 
 @Controller('products')
 export class ProductsController {
@@ -35,8 +34,8 @@ export class ProductsController {
   async findAll(
     @Query() query: SearchablePaginationParams,
   ): Promise<PaginatedResult<ProductResponseDto>> {
-    const page = Number(query.page) || 1;
-    const limit = Number(query.limit) || 10;
+    const page = query?.page || 1;
+    const limit = query?.limit || 10;
     const sort = query.sort || 'id';
     const order = (query.order || 'asc').toUpperCase() as SortOrder;
     const search = '';
