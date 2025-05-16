@@ -18,7 +18,7 @@ services:
       - commerce-network
 
   pgadmin:
-    container_name: pgadmin_container
+    container_name: pgadmin_container_e
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
@@ -43,78 +43,6 @@ services:
       - mongo-data:/data/db
 
   nest-app:
-    container_name: nest-app
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: npm run start:dev
-    ports:
-      - '3000:3000'
-    volumes:
-      - .:/usr/src/app
-      - node_modules:/usr/src/app/node_modules
-    depends_on:
-      - postgres
-      - mongo
-    environment:
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      JWT_SECRET: ${JWT_SECRET}
-    networks:
-      - commerce-network
-
-  nest-app-4:
-    container_name: nest-app
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: npm run start:dev
-    ports:
-      - '3000:3000'
-    volumes:
-      - .:/usr/src/app
-      - node_modules:/usr/src/app/node_modules
-    depends_on:
-      - postgres
-      - mongo
-    environment:
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      JWT_SECRET: ${JWT_SECRET}
-    networks:
-      - commerce-network
-
-  nest-app-3:
-    container_name: nest-app
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: npm run start:dev
-    ports:
-      - '3000:3000'
-    volumes:
-      - .:/usr/src/app
-      - node_modules:/usr/src/app/node_modules
-    depends_on:
-      - postgres
-      - mongo
-    environment:
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      JWT_SECRET: ${JWT_SECRET}
-    networks:
-      - commerce-network
-
-  nest-app-2:
     container_name: nest-app
     build:
       context: .

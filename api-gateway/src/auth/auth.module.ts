@@ -1,7 +1,5 @@
 import { Global, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AdminGuard } from './guards/admin.guard';
-import { SuperAdminGuard } from './guards/super-admin.guard';
 import { AuthController } from './auth.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -24,15 +22,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
       }),
     }),
   ],
-  providers: [
-    AuthService,
-    AdminGuard,
-    SuperAdminGuard,
-    RolesGuard,
-    JwtStrategy,
-    JwtAuthGuard,
-  ],
-  exports: [AuthService, AdminGuard, RolesGuard, SuperAdminGuard, JwtAuthGuard],
+  providers: [AuthService, RolesGuard, JwtStrategy, JwtAuthGuard],
+  exports: [AuthService, RolesGuard, JwtAuthGuard],
   controllers: [AuthController],
 })
 export class AuthModule {}
