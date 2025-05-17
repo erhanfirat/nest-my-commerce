@@ -1,3 +1,5 @@
+# todo: development a uygun otomatik güncelleyen yapılanma oluşturulmalı
+
 services:
   mongo:
     image: mongo
