@@ -8,7 +8,8 @@ export class LoginDto {
   @MinLength(6)
   password: string;
 
-  constructor(partial: Partial<LoginDto>) {
-    Object.assign(this, partial);
+  constructor(email: string, password: string) {
+    this.email = email;
+    this.password = password;
   }
 }

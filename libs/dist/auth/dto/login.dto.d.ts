@@ -1,5 +1,5 @@
 export declare class LoginDto {
     email: string;
     password: string;
-    constructor(partial: Partial<LoginDto>);
+    constructor(email: string, password: string);
 }

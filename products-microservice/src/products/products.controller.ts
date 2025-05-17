@@ -12,22 +12,22 @@ import {
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @MessagePattern(PRODUCT_PATTERNS.CREATE)
+  @MessagePattern({ cmd: PRODUCT_PATTERNS.CREATE })
   create(@Payload() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
 
-  @MessagePattern(PRODUCT_PATTERNS.FIND_ALL)
+  @MessagePattern({ cmd: PRODUCT_PATTERNS.FIND_ALL })
   findAll(@Payload() params: SearchablePaginationParams) {
     return this.productsService.findAll(params);
   }
 
-  @MessagePattern(PRODUCT_PATTERNS.FIND_ONE)
+  @MessagePattern({ cmd: PRODUCT_PATTERNS.FIND_ONE })
   findOne(@Payload() id: number) {
     return this.productsService.findOne(id);
   }
 
-  @MessagePattern(PRODUCT_PATTERNS.UPDATE)
+  @MessagePattern({ cmd: PRODUCT_PATTERNS.UPDATE })
   update(
     @Payload()
     {
@@ -41,7 +41,7 @@ export class ProductsController {
     return this.productsService.update(id, updateProductDto);
   }
 
-  @MessagePattern(PRODUCT_PATTERNS.REMOVE)
+  @MessagePattern({ cmd: PRODUCT_PATTERNS.REMOVE })
   remove(@Payload() id: number) {
     return this.productsService.remove(id);
   }
