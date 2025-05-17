@@ -50,6 +50,31 @@ services:
     networks:
       - aye-network
 
+  orders-pg-db:
+    image: postgres:16
+    container_name: nest-orders-pg-db
+    restart: always
+    ports:
+      - "${ORDERS_POSTGRES_PORT_CONTAINER}:${ORDERS_POSTGRES_PORT}"
+    environment:
+      POSTGRES_USER: ${ORDERS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${ORDERS_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${ORDERS_POSTGRES_DB}
+      POSTGRES_PORT: ${ORDERS_POSTGRES_PORT}
+    volumes:
+      - orders-pg-data:/var/lib/postgresql/data
+    networks:
+      - aye-network
+
+  orders-microservice:
+    build:
+      context: .
+      dockerfile: ./orders-microservice/Dockerfile
+    depends_on:
+      - orders-pg-db
+    networks:
+      - aye-network
+
   # pgadmin
   pgadmin:
     container_name: pgadmin_container

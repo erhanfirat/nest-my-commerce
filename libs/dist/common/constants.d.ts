@@ -14,4 +14,9 @@ export declare const SERVICES: {
         host: string;
         port: number;
     };
+    ORDERS: {
+        name: string;
+        host: string;
+        port: number;
+    };
 };

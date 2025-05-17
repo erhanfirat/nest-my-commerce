@@ -7,5 +7,5 @@ export interface JwtPayload {
 export declare const AUTH_PATTERNS: {
     LOGIN: string;
     ME: string;
-    VERIFY: string
+    VERIFY: string;
 };

@@ -15,6 +15,11 @@ exports.SERVICES = {
     AUTH: {
         name: "AUTH_MICROSERVICE",
         host: "auth_microservice",
-        port: 3020,
+        port: 3021,
+    },
+    ORDERS: {
+        name: "ORDERS_MICROSERVICE",
+        host: "orders_microservice",
+        port: 3028,
     },
 };

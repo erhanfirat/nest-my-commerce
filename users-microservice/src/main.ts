@@ -22,7 +22,7 @@ async function bootstrap() {
   );
 
   await app.listen();
-  console.log(`Auth Microservice ${port} portunda çalışıyor!`);
+  console.log(`Users Microservice ${port} portunda çalışıyor!`);
 }
 
 bootstrap();

@@ -4,4 +4,5 @@ exports.AUTH_PATTERNS = void 0;
 exports.AUTH_PATTERNS = {
     LOGIN: "Auth.Login",
     ME: "Auth.Me",
+    VERIFY: "Auth.Verify",
 };

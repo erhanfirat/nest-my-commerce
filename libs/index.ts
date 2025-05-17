@@ -23,3 +23,9 @@ export * from "./products/dto/create-product.dto";
 export * from "./products/dto/product-response.dto";
 export * from "./products/dto/update-product.dto";
 export * from "./products/types";
+
+// Orders
+
+export * from "./orders/dto/create-order.dto";
+export * from "./orders/dto/update-order.dto";
+export * from "./orders/types";

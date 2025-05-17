@@ -14,4 +14,9 @@ export const SERVICES = {
     host: "auth_microservice",
     port: 3021,
   },
+  ORDERS: {
+    name: "ORDERS_MICROSERVICE",
+    host: "orders_microservice",
+    port: 3028,
+  },
 };

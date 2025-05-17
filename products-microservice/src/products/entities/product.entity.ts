@@ -22,6 +22,9 @@ export class Product extends BaseEntityWithName {
   @Column({ name: 'is_deleted', type: 'boolean', default: false })
   isDeleted: boolean;
 
+  @Column({ name: 'seller_id', type: 'int', nullable: true })
+  sellerId: number;
+
   constructor(productDTO: Partial<Product>) {
     super();
     Object.assign(this, { ...productDTO });

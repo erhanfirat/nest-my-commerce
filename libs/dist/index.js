@@ -32,3 +32,7 @@ __exportStar(require("./products/dto/create-product.dto"), exports);
 __exportStar(require("./products/dto/product-response.dto"), exports);
 __exportStar(require("./products/dto/update-product.dto"), exports);
 __exportStar(require("./products/types"), exports);
+// Orders
+__exportStar(require("./orders/dto/create-order.dto"), exports);
+__exportStar(require("./orders/dto/update-order.dto"), exports);
+__exportStar(require("./orders/types"), exports);
