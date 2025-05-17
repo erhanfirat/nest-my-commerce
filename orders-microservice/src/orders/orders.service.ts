@@ -8,12 +8,9 @@ import {
   CreateOrderDto,
   ORDER_KAFKA_EVENTS,
   OrderCreatedEvent,
-  PRODUCT_PATTERNS,
-  ProductType,
   SERVICES,
   UpdateOrderDto,
 } from '@ecommerce/types';
-import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {
@@ -80,7 +77,10 @@ export class OrdersService implements OnModuleInit {
       totalPrice: 500,
     };
 
-    this.kafkaClient.send(ORDER_KAFKA_EVENTS.ORDER_CREATED, newOrderCreated);
+    await this.kafkaClient.emit(
+      ORDER_KAFKA_EVENTS.ORDER_CREATED,
+      newOrderCreated,
+    );
 
     return 'oldu bu iş';
     // this.orderRepository.findOne({
