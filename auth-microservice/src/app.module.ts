@@ -9,6 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['../../.env'],
     }),
     JwtModule.registerAsync({
       imports: [ConfigModule],

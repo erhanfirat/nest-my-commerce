@@ -1,4 +1,14 @@
 services:
+  mongo:
+    image: mongo
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    networks:
+      - aye-network
+    volumes:
+      - mongo-data:/data/db
+
   # users için Postgre container kaldır
   users-pg-db:
     image: postgres:16
@@ -112,6 +122,7 @@ services:
       - users-microservice
       - auth-microservice
       - products-microservice
+      - orders-microservice
 
 networks:
   aye-network:
@@ -121,4 +132,5 @@ volumes:
   users-pg-data:
   products-pg-data:
   orders-pg-data:
+  mongo-data:
   pgadmin:

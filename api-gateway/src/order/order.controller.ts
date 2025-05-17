@@ -22,7 +22,7 @@ export class OrderController {
   @Post()
   create(@Body() dto: CreateOrderDto, @Res() req: RequestWithUser) {
     const user = req.user;
-    return this.orderService.createOrder(user.id, dto);
+    return this.orderService.create(user.id, dto);
   }
 
   @Get()

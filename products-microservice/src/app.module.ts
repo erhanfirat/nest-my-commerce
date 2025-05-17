@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ProductsModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: ['../../.env'],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
