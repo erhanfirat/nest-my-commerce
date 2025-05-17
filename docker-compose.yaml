@@ -110,6 +110,15 @@ services:
     networks:
       - aye-network
 
+  stock-microservice:
+    build:
+      context: ./stock-microservice
+    depends_on:
+      - kafka
+      - products-pg-db
+    networks:
+      - aye-network
+
   auth-microservice:
     build:
       context: .
