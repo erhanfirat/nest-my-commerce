@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { OrdersModule } from './orders/orders.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -27,6 +28,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         cache: { duration: config.get<number>('TYPEORM_CACHE_DURATION') },
       }),
     }),
+    ClientsModule.register([
+      {
+        name: 'KAFKA_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'orders',
+            brokers: ['kafka:9092'],
+          },
+        },
+      },
+    ]),
   ],
   controllers: [],
   providers: [],

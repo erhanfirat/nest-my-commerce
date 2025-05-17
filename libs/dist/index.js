@@ -36,3 +36,5 @@ __exportStar(require("./products/types"), exports);
 __exportStar(require("./orders/dto/create-order.dto"), exports);
 __exportStar(require("./orders/dto/update-order.dto"), exports);
 __exportStar(require("./orders/types"), exports);
+// Events
+__exportStar(require("./events/order-created.event"), exports);
