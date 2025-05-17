@@ -4,7 +4,7 @@ exports.SERVICES = void 0;
 exports.SERVICES = {
     PRODUCTS: {
         name: "PRODUCTS_MICROSERVICE",
-        host: "products-microservice",
+        host: "products-microservice", // docker-compose name
         port: 3024,
     },
     USERS: {
@@ -21,5 +21,10 @@ exports.SERVICES = {
         name: "ORDERS_MICROSERVICE",
         host: "orders-microservice",
         port: 3028,
+    },
+    KAFKA: {
+        name: "KAFKA_MICROSERVICE",
+        host: "kafka",
+        port: 9092,
     },
 };

@@ -11,7 +11,7 @@ import {
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @MessagePattern(ORDER_PATTERNS.CREATE)
+  @MessagePattern({ cmd: ORDER_PATTERNS.CREATE })
   create(
     @Payload()
     {

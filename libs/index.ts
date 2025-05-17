@@ -4,6 +4,7 @@ export * from "./common/types";
 export * from "./common/BaseEntity";
 export * from "./common/BaseEntityWithName";
 export * from "./common/constants";
+export * from "./common/rcpException";
 
 // Auth
 
@@ -29,3 +30,7 @@ export * from "./products/types";
 export * from "./orders/dto/create-order.dto";
 export * from "./orders/dto/update-order.dto";
 export * from "./orders/types";
+
+// Events
+
+export * from "./events/order-created.event";

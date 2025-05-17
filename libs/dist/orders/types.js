@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ORDER_PATTERNS = void 0;
+exports.ORDER_KAFKA_EVENTS = exports.ORDER_PATTERNS = void 0;
 exports.ORDER_PATTERNS = {
     FIND_ALL: "Orders.FindAll",
     FIND_ONE: "Orders.FindOne",
@@ -8,4 +8,7 @@ exports.ORDER_PATTERNS = {
     CREATE: "Orders.Create",
     UPDATE: "Orders.Update",
     REMOVE: "Orders.Remove",
+};
+exports.ORDER_KAFKA_EVENTS = {
+    ORDER_CREATED: "Order.Created",
 };

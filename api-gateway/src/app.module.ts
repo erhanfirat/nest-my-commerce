@@ -4,7 +4,6 @@ import { ProductsModule } from './products/products.module';
 import { PaymentModule } from './payment/payment.module';
 import { SharedModule } from './common/shared.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderModule } from './order/order.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CartModule } from './cart/cart.module';

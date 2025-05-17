@@ -19,3 +19,6 @@ export declare const ORDER_PATTERNS: {
     UPDATE: string;
     REMOVE: string;
 };
+export declare const ORDER_KAFKA_EVENTS: {
+    ORDER_CREATED: string;
+};

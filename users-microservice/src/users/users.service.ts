@@ -4,6 +4,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import {
   CreateUserDto,
+  CustomRpcException,
   PaginatedResult,
   PaginationParams,
   SortOrder,
@@ -96,9 +97,9 @@ export class UsersService {
 
     if (!user) {
       this.logger.warn(`⚠️ Kullanıcı bulunamadı (ID: ${id})`);
-      throw new HttpException(
-        `Kullanıcı bulunamadı (ID: ${id})`,
+      throw new CustomRpcException(
         HttpStatus.NOT_FOUND,
+        'Aradığınız kişiye ulaşılamıyor.',
       );
     }
 

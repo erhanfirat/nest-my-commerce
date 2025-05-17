@@ -7,6 +7,7 @@ import {
   UpdateUserDto,
   USER_PATTERNS,
 } from '@ecommerce/types';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class UsersService {
@@ -34,8 +35,20 @@ export class UsersService {
     );
   }
 
-  findOne(id: number) {
-    return this.usersMicroservice.send({ cmd: USER_PATTERNS.FIND_ONE }, { id });
+  async findOne(id: number) {
+    try {
+      const user = await firstValueFrom(
+        this.usersMicroservice.send({ cmd: USER_PATTERNS.FIND_ONE }, id),
+      );
+
+      return user;
+    } catch (e) {
+      console.error(' ***************** API Users ****************** ');
+      console.error(' ***************** API Users ****************** ');
+      console.error(' ***************** API Users ****************** ');
+      console.error(e);
+      throw e;
+    }
   }
 
   findByEmail(email: string) {

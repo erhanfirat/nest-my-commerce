@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Res,
+  Req,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -15,13 +16,14 @@ import { RequestWithUser } from 'src/common/types/types';
 import { CreateOrderDto } from '@ecommerce/types';
 
 @UseGuards(JwtAuthGuard)
-@Controller('order')
+@Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  create(@Body() dto: CreateOrderDto, @Res() req: RequestWithUser) {
+  create(@Body() dto: CreateOrderDto, @Req() req: RequestWithUser) {
     const user = req.user;
+    console.log('******************** api gatewat > orders POST user  ', user);
     return this.orderService.create(user.id, dto);
   }
 

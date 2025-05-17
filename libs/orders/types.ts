@@ -21,3 +21,7 @@ export const ORDER_PATTERNS = {
   UPDATE: "Orders.Update",
   REMOVE: "Orders.Remove",
 };
+
+export const ORDER_KAFKA_EVENTS = {
+  ORDER_CREATED: "Order.Created",
+};

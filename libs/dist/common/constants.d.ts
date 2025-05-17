@@ -19,4 +19,9 @@ export declare const SERVICES: {
         host: string;
         port: number;
     };
+    KAFKA: {
+        name: string;
+        host: string;
+        port: number;
+    };
 };

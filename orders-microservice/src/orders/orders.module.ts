@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderItem } from './entities/order-item.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { SERVICES } from '@ecommerce/types';
+import { OrderKafkaProducerService } from './orders-kafka-producer.service';
 
 @Module({
   imports: [
@@ -20,8 +21,20 @@ import { SERVICES } from '@ecommerce/types';
         },
       },
     ]),
+    ClientsModule.register([
+      {
+        name: SERVICES.KAFKA.name,
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'orders',
+            brokers: [`${SERVICES.KAFKA.host}:${SERVICES.KAFKA.port}`],
+          },
+        },
+      },
+    ]),
   ],
   controllers: [OrdersController],
-  providers: [OrdersService],
+  providers: [OrdersService, OrderKafkaProducerService],
 })
 export class OrdersModule {}

@@ -4,7 +4,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity('order_items')
 export class OrderItem extends BaseEntity {
-  @Column({ type: 'int' })
+  @Column({ name: 'product_id', type: 'int' })
   productId: number;
 
   @ManyToOne(() => Order, (order) => order.items, {
