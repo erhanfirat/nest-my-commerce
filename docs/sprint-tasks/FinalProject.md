@@ -210,7 +210,12 @@ items: [
 
 - `ORDER_CREATED` event’ini dinler
 - Sipariş edilen ürünlerin stoklarını günceller
-- `products-ms` ile TCP veya repository üzerinden ilişki kurar
+- `products-microservice` ile TCP veya repository üzerinden ilişki kurar
+
+### 10. libs Sharek Library
+
+- Root seviyesine eklenecek olan shared kütüphanesi ile ortak tüm tip tanımları bu package içinde yapılır
+- `Entity` gibi sadece bir microservice içinde kullanılan nesneler bu kütüphane içinde olmak zorunda değildir
 
 ---
 
