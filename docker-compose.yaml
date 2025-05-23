@@ -1,6 +1,12 @@
-# todo: development a uygun otomatik güncelleyen yapılanma oluşturulmalı
-
 services:
+  libs:
+    build:
+      context: ./libs
+      dockerfile: dockerfile
+    volumes:
+      - libs-dist:/usr/src/app/dist
+      - libs-modules:/usr/src/app/node_modules
+
   mongo:
     image: mongo
     container_name: mongo-db
@@ -35,7 +41,13 @@ services:
     env_file:
       - .env
     depends_on:
+      - libs
       - users-pg-db
+    volumes:
+      - ./users-microservice:/usr/src/app/users-microservice
+      - /usr/src/app/users-microservice/node_modules
+      - libs-dist:/usr/src/app/common/dist
+      - libs-modules:/usr/src/app/common/node_modules
     networks:
       - aye-network
 
@@ -62,7 +74,13 @@ services:
     env_file:
       - .env
     depends_on:
+      - libs
       - products-pg-db
+    volumes:
+      - ./products-microservice:/usr/src/app/products-microservice
+      - /usr/src/app/products-microservice/node_modules
+      - libs-dist:/usr/src/app/common/dist
+      - libs-modules:/usr/src/app/common/node_modules
     networks:
       - aye-network
 
@@ -89,7 +107,13 @@ services:
     env_file:
       - .env
     depends_on:
+      - libs
       - orders-pg-db
+    volumes:
+      - ./orders-microservice:/usr/src/app/orders-microservice
+      - /usr/src/app/orders-microservice/node_modules
+      - libs-dist:/usr/src/app/common/dist
+      - libs-modules:/usr/src/app/common/node_modules
     networks:
       - aye-network
 
@@ -127,9 +151,54 @@ services:
       context: .
       dockerfile: ./notifications-microservice/Dockerfile
     depends_on:
+      - libs
       - kafka
+    volumes:
+      - ./notifications-microservice:/usr/src/app/notifications-microservice
+      - /usr/src/app/notifications-microservice/node_modules
+      - libs-dist:/usr/src/app/common/dist
+      - libs-modules:/usr/src/app/common/node_modules
     networks:
       - aye-network
+
+  auth-microservice:
+    build:
+      context: .
+      dockerfile: ./auth-microservice/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - libs
+      - users-microservice
+    volumes:
+      - ./auth-microservice:/usr/src/app/auth-microservice
+      - /usr/src/app/auth-microservice/node_modules
+      - libs-dist:/usr/src/app/common/dist
+      - libs-modules:/usr/src/app/common/node_modules
+    networks:
+      - aye-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ./api-gateway/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    networks:
+      - aye-network
+    depends_on:
+      - libs
+      - users-microservice
+      - auth-microservice
+      - products-microservice
+      - orders-microservice
+    volumes:
+      - ./api-gateway:/usr/src/app/api-gateway
+      - /usr/src/app/api-gateway/node_modules
+      - libs-dist:/usr/src/app/common/dist
+      - libs-modules:/usr/src/app/common/node_modules
 
   # pgadmin
   pgadmin:
@@ -147,33 +216,6 @@ services:
     networks:
       - aye-network
 
-  auth-microservice:
-    build:
-      context: .
-      dockerfile: ./auth-microservice/Dockerfile
-    env_file:
-      - .env
-    depends_on:
-      - users-microservice
-    networks:
-      - aye-network
-
-  api-gateway:
-    build:
-      context: .
-      dockerfile: ./api-gateway/Dockerfile
-    env_file:
-      - .env
-    ports:
-      - "3000:3000"
-    networks:
-      - aye-network
-    depends_on:
-      - users-microservice
-      - auth-microservice
-      - products-microservice
-      - orders-microservice
-
 networks:
   aye-network:
     driver: bridge
@@ -184,3 +226,5 @@ volumes:
   orders-pg-data:
   mongo-data:
   pgadmin:
+  libs-dist:
+  libs-modules:
