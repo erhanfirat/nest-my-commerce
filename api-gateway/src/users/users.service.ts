@@ -35,20 +35,10 @@ export class UsersService {
     );
   }
 
-  async findOne(id: number) {
-    try {
-      const user = await firstValueFrom(
-        this.usersMicroservice.send({ cmd: USER_PATTERNS.FIND_ONE }, id),
-      );
-
-      return user;
-    } catch (e) {
-      console.error(' ***************** API Users ****************** ');
-      console.error(' ***************** API Users ****************** ');
-      console.error(' ***************** API Users ****************** ');
-      console.error(e);
-      throw e;
-    }
+  findOne(id: number) {
+    return firstValueFrom(
+      this.usersMicroservice.send({ cmd: USER_PATTERNS.FIND_ONE }, id),
+    );
   }
 
   findByEmail(email: string) {
