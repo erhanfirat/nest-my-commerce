@@ -1,6 +1,6 @@
 {
   "name": "@ecommerce/types",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.15.18",
-    "standard-version": "^9.5.0"
+    "standard-version": "^9.5.0",
+    "typescript": "^5.8.3"
   }
 }
