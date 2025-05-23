@@ -1,14 +1,23 @@
 {
   "name": "@ecommerce/types",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "keywords": [],
-  "author": "",
+  "author": "Ayesoft Technology",
   "license": "ISC",
   "description": "",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "version:patch": "standard-version --release-as patch -m \"common patch %s\"",
+    "postversion": "npm run build && node ./scripts/update-dependents.js",
+    "update": "npm run build && npm run version:patch && npm run postversion"
   },
   "dependencies": {
     "class-transformer": "^0.5.1",
@@ -17,6 +26,7 @@
     "typeorm": "^0.3.24"
   },
   "devDependencies": {
-    "@types/node": "^22.15.18"
+    "@types/node": "^22.15.18",
+    "standard-version": "^9.5.0"
   }
 }
