@@ -1,4 +1,7 @@
 # Makefile
+.PHONY: up up-b stop down restart users users-s users-d users-r \
+        api api-s api-d api-r products products-s products-d products-r \
+        auth auth-s auth-d auth-r libs libs-s libs-d libs-r orders orders-s orders-d orders-r
 
 ## Global
 up:
@@ -20,41 +23,76 @@ restart:
 users:
 	docker compose up -d --build --no-deps users-microservice
 
-users-stop:
+users-s:
 	docker compose stop users-microservice
 
-users-down:
+users-d:
 	docker compose down users-microservice
 
-users-restart:
+users-r:
 	docker compose restart users-microservice
 
-## PRODUCTS
-products-up:
-	docker compose up --build --no-deps -d products-microservice
+## API-GATEWAY
+api:
+	docker compose up -d --build --no-deps api-gateway
 
-products-down:
-	docker compose stop products-microservice
-
-products-restart:
-	docker compose restart products-microservice
-
-## AUTH
-auth-up:
-	docker compose up --build --no-deps -d auth-microservice
-
-auth-down:
-	docker compose stop auth-microservice
-
-auth-restart:
-	docker compose restart auth-microservice
-
-## API GATEWAY
-gateway-up:
-	docker compose up --build --no-deps api-gateway
-
-gateway-down:
+api-s:
 	docker compose stop api-gateway
 
-gateway-restart:
+api-d:
+	docker compose down api-gateway
+
+api-r:
 	docker compose restart api-gateway
+
+## PRODUCTS
+products:
+	docker compose up --build --no-deps -d products-microservice
+
+products-s:
+	docker compose stop products-microservice
+
+products-d:
+	docker compose down products-microservice
+
+products-r:
+	docker compose restart products-microservice
+
+## ORDERS
+orders:
+	docker compose up --build --no-deps -d orders-microservice
+
+orders-s:
+	docker compose stop orders-microservice
+
+orders-d:
+	docker compose down orders-microservice
+
+orders-r:
+	docker compose restart orders-microservice
+
+## AUTH
+auth:
+	docker compose up --build --no-deps -d auth-microservice
+
+auth-s:
+	docker compose stop auth-microservice
+
+auth-d:
+	docker compose down auth-microservice
+
+auth-r:
+	docker compose restart auth-microservice
+
+## SHARED LIB
+libs:
+	docker compose up --build --no-deps -d libs
+
+libs-s:
+	docker compose stop libs
+
+libs-d:
+	docker compose down libs
+
+libs-r:
+	docker compose restart libs

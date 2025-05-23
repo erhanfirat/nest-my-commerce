@@ -4,7 +4,8 @@ services:
       context: ./libs
       dockerfile: dockerfile
     volumes:
-      - libs-dist:/usr/src/app/dist
+      # bind mount yöntemi ile libs-dist teki değişiklikler diğer servislere yüklenir
+      - ./libs-dist:/usr/src/app/dist
       - libs-modules:/usr/src/app/node_modules
 
   mongo:
@@ -46,7 +47,7 @@ services:
     volumes:
       - ./users-microservice:/usr/src/app/users-microservice
       - /usr/src/app/users-microservice/node_modules
-      - libs-dist:/usr/src/app/libs/dist
+      - ./libs-dist:/usr/src/app/libs/dist
       - libs-modules:/usr/src/app/libs/node_modules
     networks:
       - aye-network
@@ -79,7 +80,7 @@ services:
     volumes:
       - ./products-microservice:/usr/src/app/products-microservice
       - /usr/src/app/products-microservice/node_modules
-      - libs-dist:/usr/src/app/libs/dist
+      - ./libs-dist:/usr/src/app/libs/dist
       - libs-modules:/usr/src/app/libs/node_modules
     networks:
       - aye-network
@@ -112,7 +113,7 @@ services:
     volumes:
       - ./orders-microservice:/usr/src/app/orders-microservice
       - /usr/src/app/orders-microservice/node_modules
-      - libs-dist:/usr/src/app/libs/dist
+      - ./libs-dist:/usr/src/app/libs/dist
       - libs-modules:/usr/src/app/libs/node_modules
     networks:
       - aye-network
@@ -156,7 +157,7 @@ services:
     volumes:
       - ./notifications-microservice:/usr/src/app/notifications-microservice
       - /usr/src/app/notifications-microservice/node_modules
-      - libs-dist:/usr/src/app/libs/dist
+      - ./libs-dist:/usr/src/app/libs/dist
       - libs-modules:/usr/src/app/libs/node_modules
     networks:
       - aye-network
@@ -173,7 +174,7 @@ services:
     volumes:
       - ./auth-microservice:/usr/src/app/auth-microservice
       - /usr/src/app/auth-microservice/node_modules
-      - libs-dist:/usr/src/app/libs/dist
+      - ./libs-dist:/usr/src/app/libs/dist
       - libs-modules:/usr/src/app/libs/node_modules
     networks:
       - aye-network
@@ -197,7 +198,7 @@ services:
     volumes:
       - ./api-gateway:/usr/src/app/api-gateway
       - /usr/src/app/api-gateway/node_modules
-      - libs-dist:/usr/src/app/libs/dist
+      - ./libs-dist:/usr/src/app/libs/dist
       - libs-modules:/usr/src/app/libs/node_modules
 
   # pgadmin

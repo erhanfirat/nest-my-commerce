@@ -8,9 +8,12 @@ import {
   CreateOrderDto,
   ORDER_KAFKA_EVENTS,
   OrderCreatedEvent,
+  PRODUCT_PATTERNS,
+  ProductResponseDto,
   SERVICES,
   UpdateOrderDto,
 } from '@ecommerce/types';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class OrdersService implements OnModuleInit {
@@ -32,61 +35,47 @@ export class OrdersService implements OnModuleInit {
   }
 
   async create(userId: number, dto: CreateOrderDto) {
-    // const order = this.orderRepository.create({
-    //   totalPrice: dto.totalPrice,
-    //   userId,
-    // });
-    // const savedOrder = await this.orderRepository.save(order);
+    const order = this.orderRepository.create({
+      totalPrice: dto.totalPrice,
+      userId,
+    });
+    const savedOrder = await this.orderRepository.save(order);
 
-    // const orderItems: OrderItem[] = [];
+    const orderItems: OrderItem[] = [];
 
-    // for (const itemDto of dto.orderItems) {
-    //   const product = await firstValueFrom(
-    //     this.productsMicroservice.send(
-    //       { cmd: PRODUCT_PATTERNS.FIND_ONE },
-    //       { id: itemDto.productId },
-    //     ),
-    //   );
+    for (const itemDto of dto.orderItems) {
+      const product: ProductResponseDto = await firstValueFrom(
+        this.productsMicroservice.send(
+          { cmd: PRODUCT_PATTERNS.FIND_ONE },
+          itemDto.productId,
+        ),
+      );
 
-    //   if (!product) {
-    //     throw new Error(`Product with id ${itemDto.productId} not found`);
-    //   }
+      if (!product) {
+        throw new Error(`Product with id ${itemDto.productId} not found`);
+      }
 
-    //   const orderItem = this.orderItemRepository.create({
-    //     productId: product.id,
-    //     order: savedOrder,
-    //     quantity: itemDto.quantity,
-    //     price: itemDto.unitPrice,
-    //     totalPrice: itemDto.totalPrice,
-    //   });
-    //   orderItems.push(orderItem);
-    // }
+      const orderItem = this.orderItemRepository.create({
+        productId: product.id,
+        order: savedOrder,
+        quantity: itemDto.quantity,
+        price: itemDto.unitPrice,
+        totalPrice: itemDto.totalPrice,
+      });
+      orderItems.push(orderItem);
+    }
 
-    // await this.orderItemRepository.save(orderItems);
+    const savedOrderItems = await this.orderItemRepository.save(orderItems);
 
     // KAFKA EVENT EMIT
     const newOrderCreated: OrderCreatedEvent = {
-      orderId: 123,
-      userId: 2,
-      items: [
-        {
-          productId: 3,
-          quantity: 5,
-        },
-      ],
-      totalPrice: 500,
+      ...savedOrder,
+      items: savedOrderItems,
     };
 
-    await this.kafkaClient.emit(
-      ORDER_KAFKA_EVENTS.ORDER_CREATED,
-      newOrderCreated,
-    );
+    this.kafkaClient.emit(ORDER_KAFKA_EVENTS.ORDER_CREATED, newOrderCreated);
 
-    return 'oldu bu iş';
-    // this.orderRepository.findOne({
-    //   where: { id: savedOrder.id },
-    //   relations: ['items'],
-    // });
+    return savedOrder;
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {
