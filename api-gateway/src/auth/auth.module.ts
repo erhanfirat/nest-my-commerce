@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { SERVICES } from '@ecommerce/types';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { OwnerOrRolesGuard } from './guards/owner-or-roles.guard';
 
 @Global()
 @Module({
@@ -17,7 +18,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
     ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtAuthGuard],
-  exports: [JwtAuthGuard, ClientsModule],
+  providers: [AuthService, JwtAuthGuard, OwnerOrRolesGuard],
+  exports: [JwtAuthGuard, ClientsModule, OwnerOrRolesGuard],
 })
 export class AuthModule {}
