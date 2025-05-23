@@ -1,4 +1,4 @@
-# 📦 Ortak Tip, DTO ve Contract Yönetimi (Shared Library)
+# Servisler Arası Ortak Tip, DTO ve Contract Yönetimi (Shared Library)
 
 Bu proje çoklu mikroservislerden oluşmakta ve her servis kendi `package.json`’ına sahip, **NestJS monorepo yapısı kullanılmamaktadır**. Bu nedenle ortak `types`, `DTO`, `enum`, `interface` gibi tanımları merkezi ve tekrar kullanılabilir bir şekilde paylaşmak için aşağıdaki yapıyı kurmak best practice’tir.
 

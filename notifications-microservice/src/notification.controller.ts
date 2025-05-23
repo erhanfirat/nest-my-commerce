@@ -9,10 +9,6 @@ export class NotificationController {
 
   @MessagePattern(ORDER_KAFKA_EVENTS.ORDER_CREATED)
   orderCreatedEventHandler(@Payload() orderCreatedEvent: OrderCreatedEvent) {
-    console.log(' **************************************************');
-    console.log(' ************ ORDER CREATED EVENT *****************');
-    console.log(' **************************************************');
-    console.log(orderCreatedEvent);
     return this.notificationService.orderCreatedEventHandler(orderCreatedEvent);
   }
 }

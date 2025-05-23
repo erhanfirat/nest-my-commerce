@@ -1,6 +1,7 @@
 import {
   JwtPayload,
   LoginDto,
+  SERVICES,
   USER_PATTERNS,
   UserDto,
   UserResponseDto,
@@ -14,10 +15,15 @@ import { firstValueFrom } from 'rxjs';
 export class AppService {
   constructor(
     private jwtService: JwtService,
-    @Inject('USERS_MICROSERVICE') private usersMicroservice: ClientProxy,
+    @Inject(SERVICES.USERS.name) private usersMicroservice: ClientProxy,
   ) {}
 
   async validateUser(email: string, password: string) {
+    console.log(
+      'auth microservice > service.ts > validate user > ',
+      email,
+      password,
+    );
     const user: UserDto = await firstValueFrom(
       this.usersMicroservice.send(
         {
@@ -25,6 +31,10 @@ export class AppService {
         },
         email,
       ),
+    );
+    console.log(
+      'auth microservice > service.ts > user microservice findbyemail result user > ',
+      user,
     );
 
     if (!user || user.password !== password) {

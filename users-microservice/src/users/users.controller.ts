@@ -30,6 +30,7 @@ export class UsersController {
 
   @MessagePattern({ cmd: USER_PATTERNS.FIND_BY_EMAIL })
   findByEmail(@Payload() email: string) {
+    console.log('User service findByEmail email ', email);
     return this.usersService.findByEmail(email);
   }
 

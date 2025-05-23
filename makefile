@@ -2,20 +2,29 @@
 
 ## Global
 up:
-	docker compose up --build
+	docker compose up -d
+
+up-b:
+	docker compose up -d --build
+
+stop:
+	docker compose stop
 
 down:
 	docker compose down
 
 restart:
-	docker compose down && docker compose up --build  -d
+	docker compose down && docker compose up -d
 
 ## USERS
-users-up:
-	docker compose up --build --no-deps -d users-microservice
+users:
+	docker compose up -d --build --no-deps users-microservice
+
+users-stop:
+	docker compose stop users-microservice
 
 users-down:
-	docker compose stop users-microservice
+	docker compose down users-microservice
 
 users-restart:
 	docker compose restart users-microservice
