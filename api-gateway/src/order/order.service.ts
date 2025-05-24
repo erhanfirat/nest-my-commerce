@@ -10,6 +10,7 @@ export class OrderService {
   ) {}
 
   create(userId: number, createOrderDto: CreateOrderDto) {
+    console.log('order service ', userId, createOrderDto);
     return this.ordersMicroservice.send(
       { cmd: ORDER_PATTERNS.CREATE },
       { userId, createOrderDto },

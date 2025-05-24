@@ -3,13 +3,22 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { OrdersService } from './orders.service';
 import {
   CreateOrderDto,
+  CreateOrderItemDto,
   ORDER_PATTERNS,
   UpdateOrderDto,
 } from '@ecommerce/types';
+import { plainToInstance } from 'class-transformer';
 
 @Controller()
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
+
+  orderItem: CreateOrderItemDto = {
+    productId: 12,
+    price: 12,
+    quantity: 12,
+    totalPrice: 12,
+  };
 
   @MessagePattern({ cmd: ORDER_PATTERNS.CREATE })
   create(
@@ -22,11 +31,17 @@ export class OrdersController {
       createOrderDto: CreateOrderDto;
     },
   ) {
+    const transformedCreateOrderDto = plainToInstance(
+      CreateOrderDto,
+      createOrderDto,
+    );
+
     console.log(
       'Order Controller userId',
       userId,
       'createOrderDto',
       createOrderDto,
+      transformedCreateOrderDto,
     );
     return this.ordersService.create(userId, createOrderDto);
   }

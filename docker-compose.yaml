@@ -1,14 +1,14 @@
 services:
   libs:
     build:
-      context: ./libs
-      dockerfile: dockerfile
+      context: .
+      dockerfile: ./libs/dockerfile
     volumes:
-      - libs-dist:/usr/src/app/dist
-      - libs-modules:/usr/src/app/node_modules
+      - libs-dist:/usr/src/app/libs/dist
+      - libs-modules:/usr/src/app/libs/node_modules
 
   mongo:
-    image: mongo
+    image: mongo:6
     container_name: mongo-db
     ports:
       - "27017:27017"

@@ -1,5 +1,5 @@
 export class OrderCreatedEvent {
-  orderId: number;
+  id: number;
   userId: number;
   items: { productId: number; quantity: number }[];
   totalPrice: number;

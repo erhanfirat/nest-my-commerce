@@ -1,23 +1,34 @@
 # Makefile
-.PHONY: up up-b stop down restart users users-s users-d users-r \
+.PHONY: up services-up build services-build stop services-stop down services-down restart users users-s users-d users-r \
         api api-s api-d api-r products products-s products-d products-r \
         auth auth-s auth-d auth-r libs libs-s libs-d libs-r orders orders-s orders-d orders-r
 
 ## Global
 up:
 	docker compose up -d
+services-up:
+	docker compose up -d api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice
 
-up-b:
+build:
 	docker compose up -d --build
+services-build:
+	docker compose up -d --build api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice
 
 stop:
 	docker compose stop
+services-stop:
+	docker compose stop api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice
 
 down:
 	docker compose down
+services-down:
+	docker compose down api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice
+
 
 restart:
 	docker compose down && docker compose up -d
+services-restart:
+	docker compose down && docker compose up -d  api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice
 
 ## USERS
 users:
@@ -88,10 +99,10 @@ auth-r:
 libs:
 	docker compose up --build --no-deps -d libs
 
-libs-s:
+libs-stop:
 	docker compose stop libs
 
-libs-d:
+libs-down:
 	docker compose down libs
 
 libs-r:

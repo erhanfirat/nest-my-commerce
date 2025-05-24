@@ -22,11 +22,14 @@ export class OrderController {
   @Post()
   create(@Body() dto: CreateOrderDto, @Req() req: RequestWithUser) {
     const user = req.user;
+    const dtoStr = JSON.stringify(dto);
     console.log(
       '******************** api gatewat > orders POST user  ',
       user,
       'dto',
       dto,
+      'dtoStr',
+      dtoStr,
     );
     return this.orderService.create(user.id, dto);
   }
