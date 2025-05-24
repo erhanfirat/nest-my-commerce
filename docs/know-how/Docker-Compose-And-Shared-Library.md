@@ -74,7 +74,7 @@ Project-Root
   },
   "scripts": {
     "build": "tsc",
-    "version:patch": "standard-version --release-as patch -m \"common patch %s\"",
+    "version:patch": "git add ./src && git commit -m \"libs source updates\" || true && standard-version --release-as patch -m \"common library patch %s\"",
     "update": "npm run build && npm run version:patch && npm run postversion",
     "postversion": "npm run build && node ./scripts/update-dependents.js"
   },
@@ -166,7 +166,6 @@ Gereksiz kopyalamaları önlemek için önemli:
 ### docker-compose yapılanması:
 
 ```yaml
-
 my-api-gateway:
   container_name: my-api-gateway
   build:
@@ -197,7 +196,6 @@ my-api-gateway:
     - my-network
 ```
 
-
 ## Diğer servisler
 
-Diğer tüm servisler de `api-gateway` gibi ayarlanabilir. 
+Diğer tüm servisler de `api-gateway` gibi ayarlanabilir.

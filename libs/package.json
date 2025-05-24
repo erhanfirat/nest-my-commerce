@@ -15,7 +15,7 @@
   "description": "",
   "scripts": {
     "build": "tsc",
-    "version:patch": "git add ./src && git commit -m \"chore: update src for patch\" || true && standard-version --release-as patch -m \"common library patch %s\"",
+    "version:patch": "git add ./src && git commit -m \"libs source updates\" || true && standard-version --release-as patch -m \"common library patch %s\"",
     "postversion": "npm run build && node ./scripts/update-dependents.js",
     "update": "npm run build && npm run version:patch && npm run postversion"
   },

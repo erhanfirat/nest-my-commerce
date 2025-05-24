@@ -19,6 +19,3 @@ export type ProductType = {
     images: ProductImageType[];
     stock: number;
 };
-export type YeniProductTipi = {
-    biseyler: "hele";
-};
