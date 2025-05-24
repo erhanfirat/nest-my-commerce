@@ -159,7 +159,7 @@ id: number;
 orderId: number;
 productId: number;
 quantity: number;
-unitPrice: number;
+price: number;
 totalPrice: number;
 ```
 

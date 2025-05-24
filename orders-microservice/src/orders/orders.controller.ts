@@ -22,6 +22,12 @@ export class OrdersController {
       createOrderDto: CreateOrderDto;
     },
   ) {
+    console.log(
+      'Order Controller userId',
+      userId,
+      'createOrderDto',
+      createOrderDto,
+    );
     return this.ordersService.create(userId, createOrderDto);
   }
 

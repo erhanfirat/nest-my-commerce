@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   UseGuards,
-  Res,
   Req,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
@@ -23,7 +22,12 @@ export class OrderController {
   @Post()
   create(@Body() dto: CreateOrderDto, @Req() req: RequestWithUser) {
     const user = req.user;
-    console.log('******************** api gatewat > orders POST user  ', user);
+    console.log(
+      '******************** api gatewat > orders POST user  ',
+      user,
+      'dto',
+      dto,
+    );
     return this.orderService.create(user.id, dto);
   }
 

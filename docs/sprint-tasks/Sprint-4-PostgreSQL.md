@@ -90,19 +90,19 @@ Aşağıdaki adımları takip ederek proje tamamlanmalıdır.
     {
       "productId": 1,
       "quantity": 2,
-      "unitPrice": 149.99,
+      "price": 149.99,
       "totalPrice": 299.98
     },
     {
       "productId": 3,
       "quantity": 1,
-      "unitPrice": 89.99,
+      "price": 89.99,
       "totalPrice": 89.99
     },
     {
       "productId": 7,
       "quantity": 3,
-      "unitPrice": 59.5,
+      "price": 59.5,
       "totalPrice": 178.5
     }
   ],

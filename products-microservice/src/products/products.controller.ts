@@ -24,6 +24,7 @@ export class ProductsController {
 
   @MessagePattern({ cmd: PRODUCT_PATTERNS.FIND_ONE })
   findOne(@Payload() id: number) {
+    console.log('products ms > PRODUCT_PATTERNS.FIND_ONE id ', id);
     return this.productsService.findOne(id);
   }
 

@@ -1,7 +1,7 @@
 export declare class CreateOrderItemDto {
     productId: number;
     quantity: number;
-    unitPrice: number;
+    price: number;
     totalPrice: number;
 }
 export declare class CreateOrderDto {

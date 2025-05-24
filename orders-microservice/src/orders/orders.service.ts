@@ -42,6 +42,7 @@ export class OrdersService implements OnModuleInit {
     const savedOrder = await this.orderRepository.save(order);
 
     const orderItems: OrderItem[] = [];
+    console.log('Order Ms > orderservice.ts > userId ', userId, 'dto', dto);
 
     for (const itemDto of dto.orderItems) {
       const product: ProductResponseDto = await firstValueFrom(
@@ -59,7 +60,7 @@ export class OrdersService implements OnModuleInit {
         productId: product.id,
         order: savedOrder,
         quantity: itemDto.quantity,
-        price: itemDto.unitPrice,
+        price: itemDto.price,
         totalPrice: itemDto.totalPrice,
       });
       orderItems.push(orderItem);
