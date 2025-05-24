@@ -1,6 +1,6 @@
 {
   "name": "@ecommerce/types",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -15,7 +15,7 @@
   "description": "",
   "scripts": {
     "build": "tsc",
-    "version:patch": "standard-version --release-as patch -m \"common library patch %s\"",
+    "version:patch": "git add ./src && standard-version --release-as patch -m \"common library patch %s\"",
     "postversion": "npm run build && node ./scripts/update-dependents.js",
     "update": "npm run build && npm run version:patch && npm run postversion"
   },
