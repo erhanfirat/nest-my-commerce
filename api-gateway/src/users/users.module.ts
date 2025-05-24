@@ -4,6 +4,8 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { SERVICES } from '@ecommerce/types';
 import { AuthModule } from 'src/auth/auth.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
@@ -18,6 +20,13 @@ import { AuthModule } from 'src/auth/auth.module';
         },
       },
     ]),
+    CacheModule.register({
+      store: redisStore,
+      host: 'redis', // Docker Compose'daki Redis servisinin adı
+      port: 6379,
+      ttl: 3600000, // milliseconds
+      isGlobal: true,
+    }),
   ],
   controllers: [UsersController],
   providers: [UsersService],

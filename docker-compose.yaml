@@ -74,8 +74,12 @@ services:
     env_file:
       - .env
     depends_on:
-      - libs
-      - products-pg-db
+      libs:
+        condition: service_started
+      products-pg-db:
+        condition: service_started
+      redis:
+        condition: service_started
     volumes:
       - ./products-microservice:/usr/src/app/products-microservice
       - /usr/src/app/products-microservice/node_modules
@@ -199,6 +203,14 @@ services:
       - /usr/src/app/api-gateway/node_modules
       - libs-dist:/usr/src/app/libs/dist
       - libs-modules:/usr/src/app/libs/node_modules
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - aye-network
 
   # pgadmin
   pgadmin:

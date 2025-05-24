@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,7 @@ import {
   SortOrder,
   UpdateProductDto,
 } from '@ecommerce/types';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class ProductsService {
@@ -18,6 +19,7 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async findAll(
@@ -61,12 +63,23 @@ export class ProductsService {
   }
 
   async findOne(id: number): Promise<Product> {
+    const cacheKey = `product_${id}`;
+    const cachedProduct: Product | null = await this.cacheManager.get(cacheKey);
+    console.log('cachedProduct', cachedProduct);
+    if (cachedProduct) {
+      console.log(`Ürün (ID: ${id}) Cache ten çekildi.`);
+      return cachedProduct;
+    }
+
     const product = await this.productRepository.findOne({ where: { id } });
 
     if (!product) {
       throw new NotFoundException(`${id} ID'li ürün bulunamadı`);
     }
 
+    await this.cacheManager.set(cacheKey, product);
+
+    console.log(`Ürün (ID: ${id}) DB den çekildi.`);
     return product;
   }
 
