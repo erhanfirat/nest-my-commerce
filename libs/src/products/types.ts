@@ -5,6 +5,7 @@ export const PRODUCT_PATTERNS = {
   CREATE: "Products.Create",
   UPDATE: "Products.Update",
   REMOVE: "Products.Remove",
+  DECREASE_STOCK: "Products.DecreaseStock",
 };
 
 export type ProductImageType = {
@@ -19,4 +20,8 @@ export type ProductType = {
   price: number;
   images: ProductImageType[];
   stock: number;
+};
+
+export type YeniProductTipi = {
+  biseyler: "hele";
 };

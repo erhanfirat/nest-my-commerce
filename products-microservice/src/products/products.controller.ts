@@ -28,6 +28,22 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
+  @MessagePattern({ cmd: PRODUCT_PATTERNS.DECREASE_STOCK })
+  decreaseStock(
+    @Payload() { productId, quantity }: { productId: number; quantity: number },
+  ) {
+    console.log(
+      'products ms > PRODUCT_PATTERNS.DECREASE_STOCK productId, quantity: ',
+      productId,
+      quantity,
+    );
+    // TODO: servise gidecek, aşağıdakileri yapacak
+    // DB ye bağlan product ı bul
+    // stock quantity düş
+    // product ı kaydet
+    return { productId, quantity };
+  }
+
   @MessagePattern({ cmd: PRODUCT_PATTERNS.UPDATE })
   update(
     @Payload()

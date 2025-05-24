@@ -7,22 +7,22 @@
 up:
 	docker compose up -d
 services-up:
-	docker compose up -d api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice
+	docker compose up -d api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice stock-microservice
 
 build:
 	docker compose up -d --build
 services-build:
-	docker compose up -d --build api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice
+	docker compose up -d --build api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice stock-microservice
 
 stop:
 	docker compose stop
 services-stop:
-	docker compose stop api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice
+	docker compose stop api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice stock-microservice
 
 down:
 	docker compose down
 services-down:
-	docker compose down api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice
+	docker compose down api-gateway users-microservice auth-microservice products-microservice orders-microservice notifications-microservice stock-microservice
 
 
 restart:
@@ -96,8 +96,9 @@ auth-r:
 	docker compose restart auth-microservice
 
 ## SHARED LIB
+# öncesinde services-down edilmeli
 libs:
-	docker compose up --build --no-deps -d libs
+	docker volume rm nest-my-commerce_libs-dist nest-my-commerce_libs-modules && docker compose up --build --no-deps -d libs
 
 libs-stop:
 	docker compose stop libs

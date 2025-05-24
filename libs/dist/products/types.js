@@ -8,4 +8,5 @@ exports.PRODUCT_PATTERNS = {
     CREATE: "Products.Create",
     UPDATE: "Products.Update",
     REMOVE: "Products.Remove",
+    DECREASE_STOCK: "Products.DecreaseStock",
 };

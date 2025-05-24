@@ -10,6 +10,7 @@ const services = [
   "../orders-microservice",
   "../products-microservice",
   "../users-microservice",
+  "../stock-microservice",
 ];
 const commonPath = path.resolve(__dirname, "..");
 

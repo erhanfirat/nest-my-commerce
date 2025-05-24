@@ -9,5 +9,13 @@ export class NotificationService {
     console.log(' **************************************************');
     console.log(orderCreatedEvent);
     // TODO: Order ile alakalı mail atılacak
+
+    // TODO: mail servis kurulacak
+
+    // Diğer mikroservislerden bilgi alınacak
+
+    // mail template i oluşturulacak
+
+    // mail gönderilecek
   }
 }

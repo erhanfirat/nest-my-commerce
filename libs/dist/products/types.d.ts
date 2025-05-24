@@ -5,6 +5,7 @@ export declare const PRODUCT_PATTERNS: {
     CREATE: string;
     UPDATE: string;
     REMOVE: string;
+    DECREASE_STOCK: string;
 };
 export type ProductImageType = {
     id: number;
@@ -17,4 +18,7 @@ export type ProductType = {
     price: number;
     images: ProductImageType[];
     stock: number;
+};
+export type YeniProductTipi = {
+    biseyler: "hele";
 };

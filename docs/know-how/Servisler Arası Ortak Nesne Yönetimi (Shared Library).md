@@ -100,7 +100,7 @@ Her mikroservis projesinin tsconfig.json veya tsconfig.paths.json dosyasına aş
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@ecommerce/types": ["../libs/types"]
+      "@ecommerce/types": ["../libs/dist"]
     }
   }
 }

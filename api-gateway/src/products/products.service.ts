@@ -40,7 +40,7 @@ export class ProductsService {
   findOne(id: number) {
     return this.productsMicroservice.send(
       { cmd: PRODUCT_PATTERNS.FIND_ONE },
-      { id },
+      id,
     );
   }
 

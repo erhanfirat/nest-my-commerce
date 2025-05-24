@@ -4,6 +4,8 @@ export declare class OrderCreatedEvent {
     items: {
         productId: number;
         quantity: number;
+        price: number;
+        totalPrice: number;
     }[];
     totalPrice: number;
 }

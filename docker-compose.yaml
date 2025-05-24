@@ -44,6 +44,7 @@ services:
       - libs
       - users-pg-db
     volumes:
+      # Mount Binding
       - ./users-microservice:/usr/src/app/users-microservice
       - /usr/src/app/users-microservice/node_modules
       - libs-dist:/usr/src/app/libs/dist
@@ -156,6 +157,21 @@ services:
     volumes:
       - ./notifications-microservice:/usr/src/app/notifications-microservice
       - /usr/src/app/notifications-microservice/node_modules
+      - libs-dist:/usr/src/app/libs/dist
+      - libs-modules:/usr/src/app/libs/node_modules
+    networks:
+      - aye-network
+
+  stock-microservice:
+    build:
+      context: .
+      dockerfile: ./stock-microservice/Dockerfile
+    depends_on:
+      - libs
+      - kafka
+    volumes:
+      - ./stock-microservice:/usr/src/app/stock-microservice
+      - /usr/src/app/stock-microservice/node_modules
       - libs-dist:/usr/src/app/libs/dist
       - libs-modules:/usr/src/app/libs/node_modules
     networks:
