@@ -84,6 +84,12 @@ export class ProductsService {
   ): Promise<Product> {
     const product = await this.findOne(id);
 
+    console.log(
+      'products ms service > update id , updateProductDto',
+      id,
+      updateProductDto,
+    );
+
     const updatedProduct = this.productRepository.merge(
       product,
       updateProductDto,

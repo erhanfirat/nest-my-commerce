@@ -10,6 +10,8 @@ import { CartModule } from './cart/cart.module';
 import { ProductCommentModule } from './product-comment/product-comment.module';
 import { UserVisitModule } from './user-visit/user-visit.module';
 import { AuthModule } from './auth/auth.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
@@ -33,6 +35,14 @@ import { AuthModule } from './auth/auth.module';
     CartModule,
     ProductCommentModule,
     UserVisitModule,
+    CacheModule.register({
+      store: redisStore,
+      host: 'redis', // Docker Compose'daki Redis servisinin adı
+      port: 6379,
+      ttl: 600000, // Varsayılan cache ömrü saniye cinsinden (örn: 1 saat)
+      max: 1000, // Cache'te tutulacak maksimum öğe sayısı (isteğe bağlı)
+      isGlobal: true, // CacheModule'ü global olarak kullanılabilir yapın
+    }),
   ],
 })
 export class AppModule {}

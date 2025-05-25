@@ -11,6 +11,7 @@ import {
   HttpCode,
   HttpStatus,
   ParseIntPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CapitalizeNamePipe } from '../common/pipes/capitalize-name.pipe';
@@ -24,18 +25,23 @@ import {
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorator/roles.decorator';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('products')
+@UseInterceptors(CacheInterceptor)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
+  @CacheTTL(10000)
   findAll(@Query() query: SearchablePaginationParams) {
     const page = query?.page || 1;
     const limit = query?.limit || 10;
     const sort = query.sort || 'id';
     const order = (query.order || 'asc').toUpperCase() as SortOrder;
     const search = '';
+
+    console.log('Products FindAll DB den geldi');
 
     return this.productsService.findAll({ page, limit, sort, order, search });
   }
@@ -60,6 +66,12 @@ export class ProductsController {
     @Param('id', ParseIntPipe) id: number,
     @Body(CapitalizeNamePipe) updateProductDto: UpdateProductDto,
   ) {
+    console.log(
+      'api-gateway controller > update id , updateProductDto',
+      id,
+      updateProductDto,
+    );
+
     return this.productsService.update(id, updateProductDto);
   }
 
