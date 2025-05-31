@@ -76,10 +76,13 @@ export class ProductsService {
   async create(createProductDto: CreateProductDto): Promise<Product> {
     const product = this.productRepository.create({
       ...createProductDto,
+      images: createProductDto.images.map((image) => ({ url: image })) || [],
     });
 
-    const savedProduct = await this.productRepository.save(product);
+    const savedProduct: Product = await this.productRepository.save(product);
+
     await this.elasticsearchSyncService.indexProduct(savedProduct);
+
     return savedProduct;
   }
 
@@ -95,9 +98,13 @@ export class ProductsService {
       updateProductDto,
     );
 
+    const { images, ...updateProductDtoWoImages } = updateProductDto;
+
+    console.log(images);
+
     const updatedProduct = this.productRepository.merge(
       product,
-      updateProductDto,
+      updateProductDtoWoImages,
     );
 
     this.logger.log(`${id} ID'li ürün güncellendi`);

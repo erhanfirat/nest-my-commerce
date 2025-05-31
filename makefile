@@ -98,7 +98,7 @@ auth-r:
 ## SHARED LIB
 # öncesinde services-down edilmeli
 libs:
-	docker volume rm nest-my-commerce_libs-dist nest-my-commerce_libs-modules && docker compose up --build --no-deps -d libs
+	docker rm libs && docker volume rm nest-my-commerce_libs-dist nest-my-commerce_libs-modules && docker compose up --build --no-deps -d libs
 
 libs-stop:
 	docker compose stop libs

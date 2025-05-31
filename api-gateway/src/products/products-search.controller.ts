@@ -7,6 +7,7 @@ export class ProductSearchController {
 
   @Get()
   async search(@Query('q') query: string) {
+    console.log('CONTROLLER products/search ', query);
     return this.searchService.search(query);
   }
 }

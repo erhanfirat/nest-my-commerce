@@ -18,7 +18,7 @@ services:
       - mongo-data:/data/db
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.0.1
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
@@ -27,6 +27,8 @@ services:
       - xpack.security.http.ssl.enabled=false
     ports:
       - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
     networks:
       - aye-network
 
@@ -102,6 +104,7 @@ services:
     depends_on:
       - libs
       - products-pg-db
+      - elasticsearch
     volumes:
       - ./products-microservice:/usr/src/app/products-microservice
       - /usr/src/app/products-microservice/node_modules
@@ -232,6 +235,7 @@ services:
     depends_on:
       - libs
       - redis
+      - elasticsearch
       - users-microservice
       - auth-microservice
       - products-microservice
@@ -270,3 +274,4 @@ volumes:
   pgadmin:
   libs-dist:
   libs-modules:
+  esdata:

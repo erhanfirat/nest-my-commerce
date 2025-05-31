@@ -3,6 +3,6 @@ export declare class CreateProductDto {
     description: string;
     price: number;
     stock: number;
-    imageUrl?: string;
+    images: string[];
     category?: string;
 }

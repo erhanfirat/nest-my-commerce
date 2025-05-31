@@ -7,6 +7,7 @@ import { SERVICES } from '@ecommerce/types';
 import { AuthModule } from 'src/auth/auth.module';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ProductSearchService } from './products-search.service';
+import { ProductSearchController } from './products-search.controller';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { ProductSearchService } from './products-search.service';
       node: 'http://elasticsearch:9200',
     }),
   ],
-  controllers: [ProductsController],
+  controllers: [ProductSearchController, ProductsController],
   providers: [ProductsService, ProductSearchService],
 })
 export class ProductsModule {}

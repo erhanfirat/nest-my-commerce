@@ -1,10 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Product } from '../entities/product.entity';
 
 @Injectable()
-export class ElasticsearchSyncService {
+export class ElasticsearchSyncService implements OnModuleInit {
   constructor(private readonly esService: ElasticsearchService) {}
+
+  async onModuleInit() {
+    const indexExists = await this.esService.indices.exists({
+      index: 'products',
+    });
+    if (!indexExists) {
+      await this.esService.indices.create({
+        index: 'products',
+        mappings: {
+          properties: {
+            id: { type: 'integer' },
+            name: { type: 'text' },
+            description: { type: 'text' },
+            price: { type: 'float' },
+            stock: { type: 'integer' },
+            category: { type: 'keyword' },
+          },
+        },
+      });
+    }
+  }
 
   async indexProduct(product: Product) {
     await this.esService.index({

@@ -13,6 +13,11 @@ export class ProductSearchService {
           query: keyword,
           fields: ['name^3', 'description'],
           fuzziness: 'AUTO',
+          type: 'phrase_prefix', // Bu tip, 'match_phrase_prefix' davranışını taklit eder
+        },
+        match_phrase_prefix: {
+          // Bir diğer çözüm
+          name: keyword,
         },
       },
     });
