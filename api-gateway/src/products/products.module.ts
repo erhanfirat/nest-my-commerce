@@ -5,6 +5,8 @@ import { UsersModule } from 'src/users/users.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { SERVICES } from '@ecommerce/types';
 import { AuthModule } from 'src/auth/auth.module';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { ProductSearchService } from './products-search.service';
 
 @Module({
   imports: [
@@ -20,8 +22,11 @@ import { AuthModule } from 'src/auth/auth.module';
       },
     ]),
     UsersModule,
+    ElasticsearchModule.register({
+      node: 'http://elasticsearch:9200',
+    }),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService],
+  providers: [ProductsService, ProductSearchService],
 })
 export class ProductsModule {}

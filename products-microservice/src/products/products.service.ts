@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,7 @@ import {
   SortOrder,
   UpdateProductDto,
 } from '@ecommerce/types';
+import { ElasticsearchSyncService } from './elasticsearch/elasticsearch-sync.service';
 
 @Injectable()
 export class ProductsService {
@@ -18,6 +19,8 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    @Inject()
+    private readonly elasticsearchSyncService: ElasticsearchSyncService,
   ) {}
 
   async findAll(
@@ -75,7 +78,9 @@ export class ProductsService {
       ...createProductDto,
     });
 
-    return await this.productRepository.save(product);
+    const savedProduct = await this.productRepository.save(product);
+    await this.elasticsearchSyncService.indexProduct(savedProduct);
+    return savedProduct;
   }
 
   async update(
@@ -97,12 +102,15 @@ export class ProductsService {
 
     this.logger.log(`${id} ID'li ürün güncellendi`);
 
-    return await this.productRepository.save(updatedProduct);
+    const savedProduct = await this.productRepository.save(updatedProduct);
+    await this.elasticsearchSyncService.indexProduct(savedProduct);
+    return savedProduct;
   }
 
   async remove(id: number): Promise<void> {
     const product = await this.findOne(id);
     await this.productRepository.remove(product);
+    await this.elasticsearchSyncService.removeProduct(id);
 
     this.logger.log(`${id} ID'li ürün silindi`);
   }

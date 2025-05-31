@@ -25,6 +25,9 @@ export class Product extends BaseEntityWithName {
   @Column({ name: 'seller_id', type: 'int', nullable: true })
   sellerId: number;
 
+  @Column({ name: 'category', type: 'varchar', length: 255, nullable: true })
+  category: string;
+
   constructor(productDTO: Partial<Product>) {
     super();
     Object.assign(this, { ...productDTO });

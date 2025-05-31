@@ -4,10 +4,11 @@ import { ProductsController } from './products.controller';
 import { Product } from './entities/product.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductImage } from './entities/product-image.entity';
+import { ElasticsearchSyncService } from './elasticsearch/elasticsearch-sync.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Product, ProductImage])],
   controllers: [ProductsController],
-  providers: [ProductsService],
+  providers: [ProductsService, ElasticsearchSyncService],
 })
 export class ProductsModule {}

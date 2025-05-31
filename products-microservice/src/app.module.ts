@@ -2,9 +2,13 @@ import { Module } from '@nestjs/common';
 import { ProductsModule } from './products/products.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
 
 @Module({
   imports: [
+    ElasticsearchModule.register({
+      node: 'http://elasticsearch:9200',
+    }),
     ProductsModule,
     ConfigModule.forRoot({
       isGlobal: true,
