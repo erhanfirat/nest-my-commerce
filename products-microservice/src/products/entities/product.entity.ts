@@ -7,6 +7,9 @@ export class Product extends BaseEntityWithName {
   @Column({ type: 'varchar', length: 255, unique: false })
   description: string;
 
+  @Column({ type: 'varchar', length: 255, unique: false })
+  category: string;
+
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
@@ -16,7 +19,10 @@ export class Product extends BaseEntityWithName {
   @Column({ name: 'is_active', type: 'boolean', default: false })
   isActive: boolean;
 
-  @OneToMany(() => ProductImage, (productImage) => productImage.product)
+  @OneToMany(() => ProductImage, (productImage) => productImage.product, {
+    cascade: ['insert'],
+    eager: true,
+  })
   images: ProductImage[];
 
   @Column({ name: 'is_deleted', type: 'boolean', default: false })

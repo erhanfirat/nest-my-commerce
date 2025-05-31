@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,8 @@ import {
   SortOrder,
   UpdateProductDto,
 } from '@ecommerce/types';
+import { ElasticsearchSyncService } from './elasticsearch/elasticsearch-sync.service';
+import { ProductsData } from './products_data';
 
 @Injectable()
 export class ProductsService {
@@ -18,6 +20,7 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    @Inject() private readonly esSyncService: ElasticsearchSyncService,
   ) {}
 
   async findAll(
@@ -75,7 +78,11 @@ export class ProductsService {
       ...createProductDto,
     });
 
-    return await this.productRepository.save(product);
+    const savedProduct = await this.productRepository.save(product);
+
+    await this.esSyncService.indexProduct(savedProduct);
+
+    return savedProduct;
   }
 
   async update(
@@ -90,20 +97,29 @@ export class ProductsService {
       updateProductDto,
     );
 
-    const updatedProduct = this.productRepository.merge(
-      product,
-      updateProductDto,
-    );
+    // const updatedProduct = this.productRepository.merge(
+    //   product,
+    //   updateProductDto,
+    // );
 
-    this.logger.log(`${id} ID'li ürün güncellendi`);
+    // this.logger.log(`${id} ID'li ürün güncellendi`);
 
-    return await this.productRepository.save(updatedProduct);
+    // return await this.productRepository.save(updatedProduct);
+    return product;
   }
 
   async remove(id: number): Promise<void> {
     const product = await this.findOne(id);
     await this.productRepository.remove(product);
+    await this.esSyncService.removeProduct(id);
 
     this.logger.log(`${id} ID'li ürün silindi`);
+  }
+
+  async bulkInsert() {
+    await Promise.all(
+      ProductsData.map((product: CreateProductDto) => this.create(product)),
+    );
+    return true;
   }
 }

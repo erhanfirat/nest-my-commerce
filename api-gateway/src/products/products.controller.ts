@@ -46,6 +46,11 @@ export class ProductsController {
     return this.productsService.findAll({ page, limit, sort, order, search });
   }
 
+  @Get('bulk-insert')
+  bulkInsert() {
+    return this.productsService.bulkInsert();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);

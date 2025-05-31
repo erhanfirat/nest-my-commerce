@@ -9,54 +9,58 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateProductDto = void 0;
+exports.CreateProductDto = exports.ProductImageDto = void 0;
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
+class ProductImageDto {
+}
+exports.ProductImageDto = ProductImageDto;
 class CreateProductDto {
 }
 exports.CreateProductDto = CreateProductDto;
 __decorate([
-    (0, class_validator_1.IsString)({ message: 'İsim alanı metin olmalıdır' }),
-    (0, class_validator_1.MinLength)(3, { message: 'İsim en az 3 karakter olmalıdır' }),
-    (0, class_validator_1.MaxLength)(100, { message: 'İsim en fazla 100 karakter olmalıdır' }),
+    (0, class_validator_1.IsString)({ message: "İsim alanı metin olmalıdır" }),
+    (0, class_validator_1.MinLength)(3, { message: "İsim en az 3 karakter olmalıdır" }),
+    (0, class_validator_1.MaxLength)(100, { message: "İsim en fazla 100 karakter olmalıdır" }),
     (0, class_transformer_1.Transform)((params) => {
-        if (typeof params.value === 'string') {
+        if (typeof params.value === "string") {
             return params.value.trim();
         }
-        return '';
+        return "";
     }),
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "name", void 0);
 __decorate([
-    (0, class_validator_1.IsString)({ message: 'Açıklama alanı metin olmalıdır' }),
-    (0, class_validator_1.MinLength)(10, { message: 'Açıklama en az 10 karakter olmalıdır' }),
+    (0, class_validator_1.IsString)({ message: "Açıklama alanı metin olmalıdır" }),
+    (0, class_validator_1.MinLength)(10, { message: "Açıklama en az 10 karakter olmalıdır" }),
     (0, class_transformer_1.Transform)((params) => {
-        if (typeof params.value === 'string') {
+        if (typeof params.value === "string") {
             return params.value.trim();
         }
-        return '';
+        return "";
     }),
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "description", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)({}, { message: 'Fiyat sayı olmalıdır' }),
-    (0, class_validator_1.Min)(0, { message: 'Fiyat 0 veya daha büyük olmalıdır' }),
+    (0, class_validator_1.IsNumber)({}, { message: "Fiyat sayı olmalıdır" }),
+    (0, class_validator_1.Min)(0, { message: "Fiyat 0 veya daha büyük olmalıdır" }),
     (0, class_transformer_1.Type)(() => Number),
     __metadata("design:type", Number)
 ], CreateProductDto.prototype, "price", void 0);
 __decorate([
-    (0, class_validator_1.IsNumber)({}, { message: 'Stok sayı olmalıdır' }),
-    (0, class_validator_1.Min)(0, { message: 'Stok 0 veya daha büyük olmalıdır' }),
+    (0, class_validator_1.IsNumber)({}, { message: "Stok sayı olmalıdır" }),
+    (0, class_validator_1.Min)(0, { message: "Stok 0 veya daha büyük olmalıdır" }),
     (0, class_transformer_1.Type)(() => Number),
     __metadata("design:type", Number)
 ], CreateProductDto.prototype, "stock", void 0);
 __decorate([
-    (0, class_validator_1.IsUrl)({}, { message: 'Geçerli bir URL adresi giriniz' }),
+    (0, class_validator_1.IsUrl)({}, { message: "Geçerli bir URL adresi giriniz" }),
     (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], CreateProductDto.prototype, "imageUrl", void 0);
+    (0, class_validator_1.IsArray)(),
+    __metadata("design:type", Array)
+], CreateProductDto.prototype, "images", void 0);
 __decorate([
-    (0, class_validator_1.IsString)({ message: 'Kategori alanı metin olmalıdır' }),
+    (0, class_validator_1.IsString)({ message: "Kategori alanı metin olmalıdır" }),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "category", void 0);

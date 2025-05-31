@@ -62,4 +62,10 @@ export class ProductsController {
   remove(@Payload() id: number) {
     return this.productsService.remove(id);
   }
+
+  @MessagePattern({ cmd: 'products-bulk-insert' })
+  bulkInsert(@Payload() smt: string) {
+    console.log(' **************** product bulk insert', smt);
+    return this.productsService.bulkInsert();
+  }
 }

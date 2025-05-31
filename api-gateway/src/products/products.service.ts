@@ -73,29 +73,29 @@ export class ProductsService {
     );
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
-    console.log(
-      'api-gateway service > update id , updateProductDto',
-      id,
-      updateProductDto,
+  update(id: number, updateProductDto: UpdateProductDto) {
+    return this.productsMicroservice.send(
+      { cmd: PRODUCT_PATTERNS.UPDATE },
+      {
+        id,
+        updateProductDto,
+      },
     );
-
-    const updatedProduct: ProductResponseDto = await firstValueFrom(
-      this.productsMicroservice.send(
-        { cmd: PRODUCT_PATTERNS.UPDATE },
-        { id, updateProductDto },
-      ),
-    );
-    const cacheKey = `products_${id}`;
-    await this.cacheManager.del(cacheKey);
-
-    return updatedProduct;
   }
 
   remove(id: number) {
     return this.productsMicroservice.send(
       { cmd: PRODUCT_PATTERNS.REMOVE },
       { id },
+    );
+  }
+
+  bulkInsert() {
+    console.log(' **************** product bulk insert');
+
+    return this.productsMicroservice.send(
+      { cmd: 'products-bulk-insert' },
+      'test',
     );
   }
 }
