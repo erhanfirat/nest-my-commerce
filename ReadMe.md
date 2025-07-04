@@ -7,33 +7,33 @@ This project follows a **Modular Microservices Architecture**, enabling each ser
 
 ## 🔧 Technologies Used
 
-| Category           | Technologies                                                                  |
-|--------------------|-------------------------------------------------------------------------------|
-| **Core Framework** | [NestJS](https://nestjs.com/) – TypeScript-first progressive Node.js framework |
-| **Database**       | PostgreSQL, MongoDB                                                           |
-| **ORM**            | TypeORM, Mongoose                                                             |
-| **Caching & Queuing** | Redis, BullMQ                                                              |
-| **Event Streaming** | Kafka, Zookeeper                                                              |
-| **Search Engine**  | Elasticsearch                                                                 |
-| **API Gateway**    | NestJS (Custom Gateway via REST & Kafka Proxy)                               |
-| **DevOps**         | Docker, Docker Compose                                                        |
-| **Validation**     | class-validator, class-transformer                                            |
-| **Logging**        | Built-in NestJS Logger, Elasticsearch logs                                    |
+| Category              | Technologies                                                                   |
+| --------------------- | ------------------------------------------------------------------------------ |
+| **Core Framework**    | [NestJS](https://nestjs.com/) – TypeScript-first progressive Node.js framework |
+| **Database**          | PostgreSQL, MongoDB                                                            |
+| **ORM**               | TypeORM, Mongoose                                                              |
+| **Caching & Queuing** | Redis, BullMQ                                                                  |
+| **Event Streaming**   | Kafka, Zookeeper                                                               |
+| **Search Engine**     | Elasticsearch                                                                  |
+| **API Gateway**       | NestJS (Custom Gateway via REST & Kafka Proxy)                                 |
+| **DevOps**            | Docker, Docker Compose                                                         |
+| **Validation**        | class-validator, class-transformer                                             |
+| **Logging**           | Built-in NestJS Logger, Elasticsearch logs                                     |
 
 ---
 
 ## 🧱 Microservices Overview
 
-| Service                    | Description                                                                  |
-|----------------------------|------------------------------------------------------------------------------|
-| `api-gateway`              | Entry point for all HTTP traffic. Handles routing, authentication, etc.      |
-| `auth-microservice`        | Handles user login, registration, and JWT-based authentication                |
-| `users-microservice`       | Manages user data using PostgreSQL                                            |
-| `products-microservice`    | Manages products, stock info, and integrates with Elasticsearch               |
-| `orders-microservice`      | Handles orders, integrates with Kafka to emit order events                    |
-| `notifications-microservice` | Listens for events and sends emails/notifications                          |
-| `stock-microservice`       | Manages inventory and stock deduction in response to order events             |
-| `libs`                     | Shared TypeScript types & logic across services                               |
+| Service                      | Description                                                             |
+| ---------------------------- | ----------------------------------------------------------------------- |
+| `api-gateway`                | Entry point for all HTTP traffic. Handles routing, authentication, etc. |
+| `auth-microservice`          | Handles user login, registration, and JWT-based authentication          |
+| `users-microservice`         | Manages user data using PostgreSQL                                      |
+| `products-microservice`      | Manages products, stock info, and integrates with Elasticsearch         |
+| `orders-microservice`        | Handles orders, integrates with Kafka to emit order events              |
+| `notifications-microservice` | Listens for events and sends emails/notifications                       |
+| `stock-microservice`         | Manages inventory and stock deduction in response to order events       |
+| `libs`                       | Shared TypeScript types & logic across services                         |
 
 ---
 
@@ -128,10 +128,10 @@ Search is performed using `multi_match` queries with fuzzy logic and boosting on
 
 ## 🚨 Kafka Topics (Sample)
 
-| Event              | Publisher               | Subscribers                                 |
-|--------------------|--------------------------|----------------------------------------------|
-| `order.created`    | orders-microservice      | stock-microservice, notifications-microservice |
-| `product.updated`  | products-microservice    | elasticsearch-sync, gateway cache             |
+| Event             | Publisher             | Subscribers                                    |
+| ----------------- | --------------------- | ---------------------------------------------- |
+| `order.created`   | orders-microservice   | stock-microservice, notifications-microservice |
+| `product.updated` | products-microservice | elasticsearch-sync, gateway cache              |
 
 ---
 
@@ -173,5 +173,4 @@ Feel free to fork, suggest improvements, or report issues. PRs are welcome!
 
 ## 📝 License
 
-MIT License © 2025 – [Your Name or Team]
-
+MIT License © 2025 – Ayesoft Technology Co.
